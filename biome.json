@@ -11,6 +11,9 @@
       "**",
       "!dist",
       "!node_modules",
+      "!.beads",
+      "!.claude",
+      "!public",
       "!src/components/ui",
       "!src/lib/utils.ts",
       "!src/index.css"

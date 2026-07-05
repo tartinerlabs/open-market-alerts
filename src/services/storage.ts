@@ -8,9 +8,9 @@ const STORAGE_KEYS = {
 } as const;
 
 export const getLastUpdatedTimestamp = async (): Promise<string | null> => {
-  const result = await chrome.storage.local.get([
-    STORAGE_KEYS.LAST_UPDATED_TIMESTAMP,
-  ]);
+  const result = await chrome.storage.local.get<{
+    [STORAGE_KEYS.LAST_UPDATED_TIMESTAMP]?: string;
+  }>([STORAGE_KEYS.LAST_UPDATED_TIMESTAMP]);
   return result[STORAGE_KEYS.LAST_UPDATED_TIMESTAMP] ?? null;
 };
 
@@ -23,9 +23,9 @@ export const setLastUpdatedTimestamp = async (
 };
 
 export const getHasUnreadNotification = async (): Promise<boolean> => {
-  const result = await chrome.storage.local.get([
-    STORAGE_KEYS.HAS_UNREAD_NOTIFICATION,
-  ]);
+  const result = await chrome.storage.local.get<{
+    [STORAGE_KEYS.HAS_UNREAD_NOTIFICATION]?: boolean;
+  }>([STORAGE_KEYS.HAS_UNREAD_NOTIFICATION]);
   return result[STORAGE_KEYS.HAS_UNREAD_NOTIFICATION] ?? false;
 };
 
@@ -38,9 +38,9 @@ export const setHasUnreadNotification = async (
 };
 
 export const getUserPreferences = async (): Promise<UserPreferences> => {
-  const result = await chrome.storage.local.get([
-    STORAGE_KEYS.USER_PREFERENCES,
-  ]);
+  const result = await chrome.storage.local.get<{
+    [STORAGE_KEYS.USER_PREFERENCES]?: UserPreferences;
+  }>([STORAGE_KEYS.USER_PREFERENCES]);
   return result[STORAGE_KEYS.USER_PREFERENCES] ?? DEFAULT_PREFERENCES;
 };
 

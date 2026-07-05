@@ -1,5 +1,6 @@
-import { Github, MessageSquare } from "lucide-react";
+import { MessageSquare } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { GithubIcon } from "@/components/common/github-icon";
 import { Layout } from "@/components/layout/Layout";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -35,7 +36,7 @@ export const Contact = () => {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <Card>
                 <CardHeader className="flex items-center gap-2">
-                  <Github className="size-6" />
+                  <GithubIcon className="size-6" />
                   <CardTitle>GitHub Issues</CardTitle>
                 </CardHeader>
                 <CardContent>
@@ -50,7 +51,7 @@ export const Contact = () => {
                     className="flex items-center gap-2 text-slate-800 underline hover:text-slate-900"
                   >
                     Open an Issue
-                    <Github className="size-4" />
+                    <GithubIcon className="size-4" />
                   </a>
                 </CardFooter>
               </Card>
@@ -93,7 +94,7 @@ export const Contact = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-800"
                 >
-                  <Github className="size-4" />
+                  <GithubIcon className="size-4" />
                   GitHub Repository
                 </a>
               </CardFooter>
