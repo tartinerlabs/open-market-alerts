@@ -1,97 +1,86 @@
-"use client";
-
-import type { ColumnDef } from "@tanstack/react-table";
-import { Progress } from "@/components/ui/progress";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { ProgressBar, Tooltip } from "@heroui/react";
+import type { DataGridColumn } from "@heroui-pro/react";
 import type { Operation } from "@/types/reverse-repo";
 
-export const columns: ColumnDef<Operation>[] = [
+export const getColumns = (data: Operation[]): DataGridColumn<Operation>[] => [
   {
-    accessorKey: "operationDate",
+    id: "operationDate",
     header: "Date",
-    cell: ({ row }) => {
-      const date = new Date(row.getValue("operationDate"));
-      return date.toLocaleDateString();
-    },
+    accessorKey: "operationDate",
+    cell: (item) => new Date(item.operationDate).toLocaleDateString(),
   },
   {
-    accessorKey: "term",
+    id: "term",
     header: "Term",
+    accessorKey: "term",
   },
   {
-    accessorKey: "totalAmtAccepted",
+    id: "totalAmtAccepted",
     header: "Amount Accepted",
-    cell: ({ row }) => {
-      const amount = row.getValue("totalAmtAccepted") as number;
-      return `$${amount.toLocaleString()}`;
-    },
+    accessorKey: "totalAmtAccepted",
+    align: "end",
+    cell: (item) => `$${item.totalAmtAccepted.toLocaleString()}`,
   },
   {
-    accessorFn: (row) => row.details[0]?.percentAwardRate,
+    id: "awardRate",
     header: "Award Rate",
-    cell: ({ row }) => {
-      const rate = row.original.details[0]?.percentAwardRate;
+    align: "end",
+    cell: (item) => {
+      const rate = item.details[0]?.percentAwardRate;
       return rate ? `${rate.toFixed(2)}%` : "N/A";
     },
   },
   {
-    accessorKey: "participatingCpty",
+    id: "counterparties",
     header: "Counterparties",
-    cell: ({ row }) => {
-      const operation = row.original;
+    align: "end",
+    cell: (item) => {
+      const percent = (item.acceptedCpty / item.participatingCpty) * 100;
       return (
         <div className="flex justify-end">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="flex w-full max-w-24 flex-col gap-2">
-                  <Progress
-                    value={
-                      (operation.acceptedCpty / operation.participatingCpty) *
-                      100
-                    }
-                  />
-                  <div className="text-muted-foreground text-center text-xs">
-                    {Math.round(
-                      (operation.acceptedCpty / operation.participatingCpty) *
-                        100,
-                    )}
-                    %
-                  </div>
+          <Tooltip delay={300}>
+            <Tooltip.Trigger>
+              <div className="flex w-full max-w-24 flex-col gap-2">
+                <ProgressBar
+                  aria-label="Counterparties accepted"
+                  value={percent}
+                >
+                  <ProgressBar.Track>
+                    <ProgressBar.Fill />
+                  </ProgressBar.Track>
+                </ProgressBar>
+                <div className="text-muted text-center text-xs">
+                  {Math.round(percent)}%
                 </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>
-                  {operation.acceptedCpty} Accepted /{" "}
-                  {operation.participatingCpty} Participating
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+              </div>
+            </Tooltip.Trigger>
+            <Tooltip.Content>
+              <p>
+                {item.acceptedCpty} Accepted / {item.participatingCpty}{" "}
+                Participating
+              </p>
+            </Tooltip.Content>
+          </Tooltip>
         </div>
       );
     },
   },
   {
-    accessorKey: "change",
+    id: "change",
     header: "Change",
-    cell: ({ row, table }) => {
-      const currentAmount = row.getValue("totalAmtAccepted") as number;
-      const rowIndex = row.index;
-      const nextRow = table.getRowModel().rows[rowIndex + 1];
-
+    align: "center",
+    cell: (item) => {
+      const index = data.findIndex((o) => o.operationId === item.operationId);
+      const nextRow = data[index + 1];
       if (!nextRow) return null;
 
-      const previousAmount = nextRow.getValue("totalAmtAccepted") as number;
+      const currentAmount = item.totalAmtAccepted;
+      const previousAmount = nextRow.totalAmtAccepted;
 
       if (currentAmount > previousAmount) {
         return <span className="text-green-600">↑</span>;
-      } else if (currentAmount < previousAmount) {
+      }
+      if (currentAmount < previousAmount) {
         return <span className="text-red-600">↓</span>;
       }
       return <span className="text-gray-400">→</span>;

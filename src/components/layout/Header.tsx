@@ -1,5 +1,5 @@
+import { Avatar } from "@heroui/react";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 interface HeaderProps {
   showAction?: boolean;
@@ -17,7 +17,7 @@ export const Header = ({
   const headerContent = (
     <div className="flex items-center gap-3">
       <Avatar>
-        <AvatarImage src="/icon.svg" />
+        <Avatar.Image src="/icon.svg" alt="Fed Open Market Alerts" />
       </Avatar>
       <h1 className="text-2xl font-bold text-gray-900">
         Fed Open Market Alerts
@@ -26,13 +26,13 @@ export const Header = ({
   );
 
   return (
-    <header className="border-b bg-white px-6 py-4 shadow-sm">
+    <header className="border-b border-slate-200 bg-white px-6 py-4 shadow-sm">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           {homeLink ? (
             <Link to="/" className="flex items-center gap-3">
               <Avatar>
-                <AvatarImage src="/icon.svg" />
+                <Avatar.Image src="/icon.svg" alt="Fed Open Market Alerts" />
               </Avatar>
               <h1 className="text-2xl font-bold text-gray-900">
                 Fed Open Market Alerts

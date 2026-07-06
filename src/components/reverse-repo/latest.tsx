@@ -1,3 +1,4 @@
+import { Alert } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import {
   AlertCircle,
@@ -12,7 +13,6 @@ import {
 } from "lucide-react";
 import { Loader } from "@/components/common/loader";
 import { MetricCard } from "@/components/common/metric-card";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { getLatestReverseRepo } from "@/services/reverse-repo.ts";
 
 export const Latest = () => {
@@ -29,16 +29,24 @@ export const Latest = () => {
     return <Loader message="Loading latest reverse repo operation..." />;
   if (error)
     return (
-      <Alert variant="destructive">
-        <AlertCircle />
-        <AlertTitle>Error: {error.message}</AlertTitle>
+      <Alert status="danger">
+        <Alert.Indicator>
+          <AlertCircle />
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>Error: {error.message}</Alert.Title>
+        </Alert.Content>
       </Alert>
     );
   if (!operation)
     return (
       <Alert>
-        <Building2 />
-        <AlertTitle>No reverse repo operations found</AlertTitle>
+        <Alert.Indicator>
+          <Building2 />
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>No reverse repo operations found</Alert.Title>
+        </Alert.Content>
       </Alert>
     );
 

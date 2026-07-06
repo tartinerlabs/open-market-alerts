@@ -1,3 +1,4 @@
+import { Alert } from "@heroui/react";
 import { useQuery } from "@tanstack/react-query";
 import {
   BarChart3,
@@ -18,7 +19,6 @@ import { Section } from "@/components/landing/section";
 import { StepItem } from "@/components/landing/step-item";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
-import { Alert, AlertTitle } from "@/components/ui/alert";
 import { getLatestReverseRepo } from "@/services/reverse-repo";
 
 export const Landing = () => {
@@ -215,8 +215,11 @@ export const Landing = () => {
           {loading && <Loader message="Loading latest operation..." />}
 
           {error && (
-            <Alert variant="destructive">
-              <AlertTitle>Unable to load current market data</AlertTitle>
+            <Alert status="danger">
+              <Alert.Indicator />
+              <Alert.Content>
+                <Alert.Title>Unable to load current market data</Alert.Title>
+              </Alert.Content>
             </Alert>
           )}
 

@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "@heroui/styles";
+@import "@heroui-pro/react/css";
+@import "@heroui-pro/react/themes/mouve";
+
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+  }
+}

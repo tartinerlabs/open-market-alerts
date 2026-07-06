@@ -1,11 +1,11 @@
+import { Alert } from "@heroui/react";
+import { DataGrid } from "@heroui-pro/react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, Building2, Table2, TrendingUp } from "lucide-react";
 import { Loader } from "@/components/common/loader";
-import { Alert, AlertTitle } from "@/components/ui/alert";
-import { DataTable } from "@/components/ui/data-table";
 import { getRecentReverseRepoTrend } from "@/services/reverse-repo.ts";
 import { Charts } from "./charts";
-import { columns } from "./columns";
+import { getColumns } from "./columns";
 
 export const Trend = () => {
   const {
@@ -23,9 +23,13 @@ export const Trend = () => {
 
   if (error) {
     return (
-      <Alert variant="destructive">
-        <AlertCircle />
-        <AlertTitle>Error: {error.message}</AlertTitle>
+      <Alert status="danger">
+        <Alert.Indicator>
+          <AlertCircle />
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>Error: {error.message}</Alert.Title>
+        </Alert.Content>
       </Alert>
     );
   }
@@ -33,8 +37,12 @@ export const Trend = () => {
   if (!data || data.length === 0) {
     return (
       <Alert>
-        <Building2 />
-        <AlertTitle>No reverse repo operations found</AlertTitle>
+        <Alert.Indicator>
+          <Building2 />
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>No reverse repo operations found</Alert.Title>
+        </Alert.Content>
       </Alert>
     );
   }
@@ -65,7 +73,12 @@ export const Trend = () => {
             </div>
           </div>
           <div className="p-6">
-            <DataTable columns={columns} data={data} />
+            <DataGrid
+              aria-label="Detailed reverse repo operations"
+              columns={getColumns(data)}
+              data={data}
+              getRowId={(item) => item.operationId}
+            />
           </div>
         </div>
       </div>

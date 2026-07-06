@@ -1,9 +1,6 @@
+import { Button, Separator, Switch } from "@heroui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, RotateCcw } from "lucide-react";
-import { useId } from "react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
 import {
   getUserPreferences,
   resetUserPreferences,
@@ -18,10 +15,6 @@ interface ViewProps {
 
 export const View = ({ onBack }: ViewProps) => {
   const queryClient = useQueryClient();
-
-  const notificationsEnabledId = useId();
-  const immediateNotificationsId = useId();
-  const dailySummaryId = useId();
 
   const { data: preferences = DEFAULT_PREFERENCES } = useQuery({
     queryKey: ["user-preferences"],
@@ -63,19 +56,22 @@ export const View = ({ onBack }: ViewProps) => {
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <label
-                htmlFor={notificationsEnabledId}
-                className="text-sm font-medium text-slate-700"
-              >
+              <span className="text-sm font-medium text-slate-700">
                 {PREFERENCE_LABELS.notificationsEnabled}
-              </label>
+              </span>
               <Switch
-                id={notificationsEnabledId}
-                checked={preferences.notificationsEnabled}
-                onCheckedChange={(checked) =>
+                aria-label={PREFERENCE_LABELS.notificationsEnabled}
+                isSelected={preferences.notificationsEnabled}
+                onChange={(checked) =>
                   updatePreference({ notificationsEnabled: checked })
                 }
-              />
+              >
+                <Switch.Content>
+                  <Switch.Control>
+                    <Switch.Thumb />
+                  </Switch.Control>
+                </Switch.Content>
+              </Switch>
             </div>
 
             <Separator />
@@ -83,46 +79,52 @@ export const View = ({ onBack }: ViewProps) => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <label
-                    htmlFor={immediateNotificationsId}
-                    className="text-sm text-slate-700"
-                  >
+                  <span className="text-sm text-slate-700">
                     {PREFERENCE_LABELS.immediateNotifications}
-                  </label>
+                  </span>
                   <p className="text-xs text-slate-500">
                     Get notified immediately when new Fed data is available
                   </p>
                 </div>
                 <Switch
-                  id={immediateNotificationsId}
-                  checked={preferences.immediateNotifications}
-                  disabled={!preferences.notificationsEnabled}
-                  onCheckedChange={(checked) =>
+                  aria-label={PREFERENCE_LABELS.immediateNotifications}
+                  isSelected={preferences.immediateNotifications}
+                  isDisabled={!preferences.notificationsEnabled}
+                  onChange={(checked) =>
                     updatePreference({ immediateNotifications: checked })
                   }
-                />
+                >
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                  </Switch.Content>
+                </Switch>
               </div>
 
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <label
-                    htmlFor={dailySummaryId}
-                    className="text-sm text-slate-700"
-                  >
+                  <span className="text-sm text-slate-700">
                     {PREFERENCE_LABELS.dailySummary}
-                  </label>
+                  </span>
                   <p className="text-xs text-slate-500">
                     Receive a daily summary of Fed operations
                   </p>
                 </div>
                 <Switch
-                  id={dailySummaryId}
-                  checked={preferences.dailySummary}
-                  disabled={!preferences.notificationsEnabled}
-                  onCheckedChange={(checked) =>
+                  aria-label={PREFERENCE_LABELS.dailySummary}
+                  isSelected={preferences.dailySummary}
+                  isDisabled={!preferences.notificationsEnabled}
+                  onChange={(checked) =>
                     updatePreference({ dailySummary: checked })
                   }
-                />
+                >
+                  <Switch.Content>
+                    <Switch.Control>
+                      <Switch.Thumb />
+                    </Switch.Control>
+                  </Switch.Content>
+                </Switch>
               </div>
             </div>
           </div>
@@ -134,7 +136,7 @@ export const View = ({ onBack }: ViewProps) => {
           <Button
             variant="ghost"
             size="sm"
-            onClick={handleReset}
+            onPress={handleReset}
             className="text-slate-500 hover:text-slate-700"
           >
             <RotateCcw className="mr-1 h-3 w-3" />

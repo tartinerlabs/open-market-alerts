@@ -1,5 +1,5 @@
+import { Avatar } from "@heroui/react";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 
 export const Footer = () => {
   return (
@@ -9,7 +9,7 @@ export const Footer = () => {
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="flex items-center gap-3">
               <Avatar>
-                <AvatarImage src="/icon.svg" />
+                <Avatar.Image src="/icon.svg" alt="Fed Open Market Alerts" />
               </Avatar>
               <span className="text-lg font-semibold">
                 Fed Open Market Alerts

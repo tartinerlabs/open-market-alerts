@@ -1,17 +1,10 @@
+import { Alert, Separator } from "@heroui/react";
+import { LineChart } from "@heroui-pro/react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, Building2, ExternalLink, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Line, LineChart, XAxis, YAxis } from "recharts";
 import { Loader } from "@/components/common/loader";
 import { View } from "@/components/settings/view";
-import { Alert, AlertTitle } from "@/components/ui/alert";
-import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
-import { Separator } from "@/components/ui/separator";
 import {
   getLatestReverseRepo,
   getRecentReverseRepoTrend,
@@ -62,13 +55,6 @@ export const Popup = () => {
       compactDisplay: "short",
     }).format(amount);
 
-  const chartConfig = {
-    amountAccepted: {
-      label: "Amount",
-      color: "var(--chart-1)",
-    },
-  } satisfies ChartConfig;
-
   const chartData =
     trendData
       ?.slice(0, 7)
@@ -92,17 +78,25 @@ export const Popup = () => {
 
   if (error)
     return (
-      <Alert variant="destructive">
-        <AlertCircle />
-        <AlertTitle>Error: {error.message}</AlertTitle>
+      <Alert status="danger">
+        <Alert.Indicator>
+          <AlertCircle />
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>Error: {error.message}</Alert.Title>
+        </Alert.Content>
       </Alert>
     );
 
   if (!operation)
     return (
       <Alert>
-        <Building2 />
-        <AlertTitle>No operations found</AlertTitle>
+        <Alert.Indicator>
+          <Building2 />
+        </Alert.Indicator>
+        <Alert.Content>
+          <Alert.Title>No operations found</Alert.Title>
+        </Alert.Content>
       </Alert>
     );
 
@@ -173,27 +167,28 @@ export const Popup = () => {
             <div className="mb-2 text-xs font-medium text-slate-600">
               7-Day Trend
             </div>
-            <ChartContainer config={chartConfig} className="h-32 w-full">
-              <LineChart accessibilityLayer data={chartData}>
-                <XAxis dataKey="date" axisLine={false} tickLine={false} />
-                <YAxis hide />
-                <ChartTooltip
-                  content={
-                    <ChartTooltipContent
-                      indicator="line"
-                      nameKey="amountAccepted"
-                    />
-                  }
-                />
-                <Line
-                  type="monotone"
-                  dataKey="amountAccepted"
-                  stroke="var(--color-amountAccepted)"
-                  strokeWidth={2}
-                  dot={false}
-                />
-              </LineChart>
-            </ChartContainer>
+            <LineChart
+              data={chartData}
+              height={128}
+              margin={{ top: 4, right: 0, bottom: 0, left: 0 }}
+            >
+              <LineChart.XAxis dataKey="date" />
+              <LineChart.YAxis hide />
+              <LineChart.Line
+                dataKey="amountAccepted"
+                stroke="var(--chart-3)"
+                strokeWidth={2}
+                type="monotone"
+                dot={false}
+              />
+              <LineChart.Tooltip
+                content={
+                  <LineChart.TooltipContent
+                    valueFormatter={(v) => `$${Number(v).toFixed(1)}B`}
+                  />
+                }
+              />
+            </LineChart>
           </>
         )}
 
