@@ -41,7 +41,7 @@ export const Contact = () => {
                     href="https://github.com/ruchernchong/fed-open-market-alerts/issues"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-slate-800 underline hover:text-slate-900"
+                    className="flex items-center gap-2 text-accent underline hover:text-accent-hover"
                   >
                     Open an Issue
                     <GithubIcon className="size-4" />
@@ -63,7 +63,7 @@ export const Contact = () => {
                     href="https://github.com/ruchernchong/fed-open-market-alerts/discussions"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-slate-800 underline hover:text-slate-900"
+                    className="flex items-center gap-2 text-accent underline hover:text-accent-hover"
                   >
                     Start Discussion
                     <MessageSquare className="size-4" />
@@ -85,7 +85,7 @@ export const Contact = () => {
                   href="https://github.com/ruchernchong/fed-open-market-alerts"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-slate-600 hover:text-slate-800"
+                  className="inline-flex items-center gap-1 text-muted hover:text-foreground"
                 >
                   <GithubIcon className="size-4" />
                   GitHub Repository
@@ -93,12 +93,11 @@ export const Contact = () => {
               </Card.Footer>
             </Card>
 
-            <Alert className="border-amber-200 bg-amber-50">
+            <Alert status="warning">
+              <Alert.Indicator />
               <Alert.Content>
-                <Alert.Title className="text-amber-900">
-                  Response Time
-                </Alert.Title>
-                <Alert.Description className="text-amber-800">
+                <Alert.Title>Response Time</Alert.Title>
+                <Alert.Description>
                   This is a personal project maintained in my spare time. While
                   I'll do my best to respond promptly, please allow for
                   reasonable response times, especially for complex issues.

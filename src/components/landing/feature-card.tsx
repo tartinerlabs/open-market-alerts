@@ -24,11 +24,11 @@ export const FeatureCard = ({
       whileHover={{ y: -5 }}
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100">
-        <Icon className="h-8 w-8 text-slate-600" />
+      <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent-soft">
+        <Icon className="h-8 w-8 text-accent" />
       </div>
-      <h4 className="mb-2 text-xl font-semibold text-slate-900">{title}</h4>
-      <p className="text-slate-600">{description}</p>
+      <h4 className="mb-2 text-xl font-semibold text-foreground">{title}</h4>
+      <p className="text-muted">{description}</p>
     </motion.div>
   );
 };

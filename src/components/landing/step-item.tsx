@@ -25,14 +25,14 @@ export const StepItem = ({ stepNumber, title, description }: StepItemProps) => {
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
       <motion.div
-        className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-slate-800 text-white"
+        className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-accent text-accent-foreground"
         variants={stepVariants}
         whileHover={{ scale: 1.1, backgroundColor: "#475569" }}
       >
         <span className="text-2xl font-bold">{stepNumber}</span>
       </motion.div>
-      <h4 className="mb-3 text-xl font-semibold text-slate-900">{title}</h4>
-      <p className="text-slate-600">{description}</p>
+      <h4 className="mb-3 text-xl font-semibold text-foreground">{title}</h4>
+      <p className="text-muted">{description}</p>
     </motion.div>
   );
 };

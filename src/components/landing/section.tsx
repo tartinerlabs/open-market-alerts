@@ -14,7 +14,7 @@ const sectionVariants = {
 
 export const Section = ({
   children,
-  className = "bg-white py-16",
+  className = "bg-surface py-16",
   maxWidth = "6xl",
 }: SectionProps) => {
   return (

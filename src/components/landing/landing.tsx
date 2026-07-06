@@ -80,11 +80,11 @@ export const Landing = () => {
         <meta property="og:type" content="website" />
       </Helmet>
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-background">
         <Header showAction={true} />
 
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-slate-800 to-slate-900 py-20 text-white">
+        <section className="bg-foreground py-20 text-background">
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-4xl text-center">
               <motion.h2
@@ -98,12 +98,10 @@ export const Landing = () => {
                 viewport={{ once: true }}
               >
                 Federal Reserve Market{" "}
-                <span className="bg-red-400 bg-clip-text text-transparent">
-                  Alerts
-                </span>
+                <span className="text-accent">Alerts</span>
               </motion.h2>
               <motion.p
-                className="mb-8 text-xl text-slate-300"
+                className="mb-8 text-xl text-background/70"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{
@@ -146,7 +144,7 @@ export const Landing = () => {
         </section>
 
         {/* Features Section */}
-        <Section className="bg-white py-16">
+        <Section className="bg-surface py-16">
           <motion.div
             className="mb-12 text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -157,10 +155,10 @@ export const Landing = () => {
             }}
             viewport={{ once: true }}
           >
-            <h3 className="mb-4 text-3xl font-bold text-slate-900">
+            <h3 className="mb-4 text-3xl font-bold text-foreground">
               Key Features
             </h3>
-            <p className="text-lg text-slate-600">
+            <p className="text-lg text-muted">
               Everything you need to stay informed about Fed operations
             </p>
           </motion.div>
@@ -204,10 +202,10 @@ export const Landing = () => {
             }}
             viewport={{ once: true }}
           >
-            <h3 className="mb-4 text-3xl font-bold text-slate-900">
+            <h3 className="mb-4 text-3xl font-bold text-foreground">
               Latest Data
             </h3>
-            <p className="text-lg text-slate-600">
+            <p className="text-lg text-muted">
               Latest data from the Federal Reserve Bank of New York
             </p>
           </motion.div>
@@ -225,7 +223,7 @@ export const Landing = () => {
 
           {operation && (
             <motion.div
-              className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg"
+              className="overflow-hidden rounded-xl bg-surface shadow-surface"
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{
@@ -235,15 +233,15 @@ export const Landing = () => {
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
             >
-              <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-6">
+              <div className="border-b border-border p-6">
                 <div className="flex items-center gap-3">
                   <motion.div
-                    className="rounded-lg bg-white/10 p-2"
+                    className="rounded-lg bg-accent-soft p-2"
                     whileHover={{ scale: 1.1, rotate: 5 }}
                   >
-                    <TrendingUp className="h-6 w-6 text-white" />
+                    <TrendingUp className="h-6 w-6 text-accent" />
                   </motion.div>
-                  <h4 className="text-xl font-bold text-white">
+                  <h4 className="text-xl font-bold text-foreground">
                     Latest Operation -{" "}
                     {new Date(operation.operationDate).toLocaleDateString(
                       "en-US",
@@ -304,7 +302,7 @@ export const Landing = () => {
             <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.98 }}>
               <Link
                 to="/dashboard"
-                className="inline-flex items-center gap-2 rounded-lg bg-slate-800 px-6 py-3 text-white transition-colors hover:bg-slate-700"
+                className="inline-flex items-center gap-2 rounded-lg bg-accent px-6 py-3 text-accent-foreground transition-colors hover:bg-accent-hover"
               >
                 <span>View Dashboard</span>
                 <ExternalLink className="h-4 w-4" />
@@ -314,7 +312,7 @@ export const Landing = () => {
         </Section>
 
         {/* How It Works */}
-        <Section className="bg-slate-50 py-16">
+        <Section className="bg-surface-secondary py-16">
           <motion.div
             className="mb-12 text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -325,10 +323,10 @@ export const Landing = () => {
             }}
             viewport={{ once: true }}
           >
-            <h3 className="mb-4 text-3xl font-bold text-slate-900">
+            <h3 className="mb-4 text-3xl font-bold text-foreground">
               How It Works
             </h3>
-            <p className="text-lg text-slate-600">
+            <p className="text-lg text-muted">
               Get started in three simple steps
             </p>
           </motion.div>
@@ -361,7 +359,7 @@ export const Landing = () => {
         </Section>
 
         {/* Educational Content */}
-        <Section className="bg-white py-16" maxWidth="4xl">
+        <Section className="bg-surface py-16" maxWidth="4xl">
           <motion.div
             className="mb-12 text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -372,16 +370,16 @@ export const Landing = () => {
             }}
             viewport={{ once: true }}
           >
-            <h3 className="mb-4 text-3xl font-bold text-slate-900">
+            <h3 className="mb-4 text-3xl font-bold text-foreground">
               Understanding Fed Operations
             </h3>
-            <p className="text-lg text-slate-600">
+            <p className="text-lg text-muted">
               Learn about Federal Reserve Open Market Operations
             </p>
           </motion.div>
 
           <motion.div
-            className="rounded-xl bg-slate-50 p-8"
+            className="rounded-xl bg-surface-secondary p-8"
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{
@@ -399,31 +397,31 @@ export const Landing = () => {
               viewport={{ once: true }}
             >
               <motion.div variants={staggerItem}>
-                <h4 className="mb-4 text-xl font-semibold text-slate-900">
+                <h4 className="mb-4 text-xl font-semibold text-foreground">
                   What are Reverse Repo Operations?
                 </h4>
-                <p className="mb-4 text-slate-600">
+                <p className="mb-4 text-muted">
                   Reverse repurchase agreements (reverse repos) are monetary
                   policy tools where the Federal Reserve sells securities to
                   eligible institutions with an agreement to buy them back at a
                   specified price on a future date.
                 </p>
-                <p className="text-slate-600">
+                <p className="text-muted">
                   These operations help the Fed manage short-term interest rates
                   and control the money supply in financial markets.
                 </p>
               </motion.div>
 
               <motion.div variants={staggerItem}>
-                <h4 className="mb-4 text-xl font-semibold text-slate-900">
+                <h4 className="mb-4 text-xl font-semibold text-foreground">
                   Why Monitor These Operations?
                 </h4>
-                <p className="mb-4 text-slate-600">
+                <p className="mb-4 text-muted">
                   Fed operations provide insights into monetary policy direction
                   and market liquidity conditions. Changes in operation volumes
                   and rates can signal policy shifts.
                 </p>
-                <p className="text-slate-600">
+                <p className="text-muted">
                   Financial professionals, researchers, and market participants
                   use this data to understand Fed policy implementation and
                   market dynamics.
@@ -434,7 +432,7 @@ export const Landing = () => {
         </Section>
 
         {/* FAQ */}
-        <Section className="bg-slate-50 py-16" maxWidth="4xl">
+        <Section className="bg-surface-secondary py-16" maxWidth="4xl">
           <motion.div
             className="mb-12 text-center"
             initial={{ opacity: 0, y: 30 }}
@@ -445,7 +443,7 @@ export const Landing = () => {
             }}
             viewport={{ once: true }}
           >
-            <h3 className="mb-4 text-3xl font-bold text-slate-900">
+            <h3 className="mb-4 text-3xl font-bold text-foreground">
               Frequently Asked Questions
             </h3>
           </motion.div>
@@ -491,7 +489,7 @@ export const Landing = () => {
                   href="https://github.com/ruchernchong/fed-open-market-alerts"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="font-medium text-slate-800 underline hover:text-slate-900"
+                  className="font-medium text-accent underline hover:text-accent-hover"
                 >
                   GitHub
                 </a>

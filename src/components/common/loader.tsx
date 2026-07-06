@@ -2,7 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const loaderVariants = cva(
-  "flex items-center justify-center rounded-xl border border-slate-200 bg-gradient-to-br from-slate-50 to-slate-100 shadow-sm",
+  "flex items-center justify-center rounded-xl bg-surface-secondary",
   {
     variants: {
       size: {
@@ -18,7 +18,7 @@ const loaderVariants = cva(
 );
 
 const spinnerVariants = cva(
-  "animate-spin rounded-full border-2 border-slate-300 border-t-slate-600",
+  "animate-spin rounded-full border-2 border-default border-t-accent",
   {
     variants: {
       size: {
@@ -47,7 +47,7 @@ const Loader = ({
 }: LoaderProps) => {
   return (
     <div className={cn(loaderVariants({ size, className }))} {...props}>
-      <div className="flex items-center gap-3 text-slate-600">
+      <div className="flex items-center gap-3 text-muted">
         <div className={cn(spinnerVariants({ size }))} />
         <span className="font-medium">{message}</span>
       </div>

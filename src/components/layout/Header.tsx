@@ -19,14 +19,14 @@ export const Header = ({
       <Avatar>
         <Avatar.Image src="/icon.svg" alt="Fed Open Market Alerts" />
       </Avatar>
-      <h1 className="text-2xl font-bold text-gray-900">
+      <h1 className="text-2xl font-bold text-foreground">
         Fed Open Market Alerts
       </h1>
     </div>
   );
 
   return (
-    <header className="border-b border-slate-200 bg-white px-6 py-4 shadow-sm">
+    <header className="border-b border-border bg-surface px-6 py-4">
       <div className="container mx-auto">
         <div className="flex items-center justify-between">
           {homeLink ? (
@@ -34,7 +34,7 @@ export const Header = ({
               <Avatar>
                 <Avatar.Image src="/icon.svg" alt="Fed Open Market Alerts" />
               </Avatar>
-              <h1 className="text-2xl font-bold text-gray-900">
+              <h1 className="text-2xl font-bold text-foreground">
                 Fed Open Market Alerts
               </h1>
             </Link>
@@ -47,7 +47,7 @@ export const Header = ({
               <Link
                 to={actionHref}
                 target="_blank"
-                className="flex items-center gap-2 rounded-full bg-slate-800 px-6 py-4 text-white transition-colors hover:bg-slate-700"
+                className="flex items-center gap-2 rounded-full bg-accent px-6 py-4 text-accent-foreground transition-colors hover:bg-accent-hover"
               >
                 {actionText}
               </Link>

@@ -1,4 +1,4 @@
-import { Button, Separator, Switch } from "@heroui/react";
+import { Button, Separator, Switch, Tooltip } from "@heroui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, RotateCcw } from "lucide-react";
 import {
@@ -34,29 +34,33 @@ export const View = ({ onBack }: ViewProps) => {
   };
 
   return (
-    <div className="w-80 bg-white">
-      <div className="bg-gradient-to-r from-slate-800 to-slate-700 p-4">
-        <div className="flex items-center gap-3">
-          <button
-            type="button"
-            onClick={onBack}
-            className="text-white transition-colors hover:text-slate-200"
-          >
-            <ArrowLeft className="h-5 w-5" />
-          </button>
-          <h1 className="text-lg font-bold text-white">Settings</h1>
-        </div>
+    <div className="w-80 bg-surface">
+      <div className="flex items-center gap-3 border-b border-border p-4">
+        <Tooltip>
+          <Tooltip.Trigger>
+            <Button
+              isIconOnly
+              variant="ghost"
+              aria-label="Back"
+              onPress={onBack}
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Tooltip.Trigger>
+          <Tooltip.Content>Back</Tooltip.Content>
+        </Tooltip>
+        <h1 className="text-lg font-bold text-foreground">Settings</h1>
       </div>
 
       <div className="space-y-6 p-4">
         <div className="space-y-4">
-          <h2 className="text-base font-semibold text-slate-900">
+          <h2 className="text-base font-semibold text-foreground">
             Notifications
           </h2>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-slate-700">
+              <span className="text-sm font-medium text-foreground">
                 {PREFERENCE_LABELS.notificationsEnabled}
               </span>
               <Switch
@@ -79,10 +83,10 @@ export const View = ({ onBack }: ViewProps) => {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <span className="text-sm text-slate-700">
+                  <span className="text-sm text-foreground">
                     {PREFERENCE_LABELS.immediateNotifications}
                   </span>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted">
                     Get notified immediately when new Fed data is available
                   </p>
                 </div>
@@ -104,10 +108,10 @@ export const View = ({ onBack }: ViewProps) => {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <span className="text-sm text-slate-700">
+                  <span className="text-sm text-foreground">
                     {PREFERENCE_LABELS.dailySummary}
                   </span>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-muted">
                     Receive a daily summary of Fed operations
                   </p>
                 </div>
@@ -133,12 +137,7 @@ export const View = ({ onBack }: ViewProps) => {
         <Separator />
 
         <div className="flex justify-center">
-          <Button
-            variant="ghost"
-            size="sm"
-            onPress={handleReset}
-            className="text-slate-500 hover:text-slate-700"
-          >
+          <Button variant="ghost" size="sm" onPress={handleReset}>
             <RotateCcw className="mr-1 h-3 w-3" />
             Reset to defaults
           </Button>

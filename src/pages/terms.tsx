@@ -92,7 +92,7 @@ export const Terms = () => {
             For questions about these terms, please contact us through our{" "}
             <Link
               to="/contact"
-              className="text-slate-800 underline hover:text-slate-900"
+              className="text-accent underline hover:text-accent-hover"
             >
               contact page
             </Link>{" "}
@@ -101,7 +101,7 @@ export const Terms = () => {
               href="https://github.com/ruchernchong/fed-open-market-alerts"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-slate-800 underline hover:text-slate-900"
+              className="text-accent underline hover:text-accent-hover"
             >
               GitHub repository
             </a>

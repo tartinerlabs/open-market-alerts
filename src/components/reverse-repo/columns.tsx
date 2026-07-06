@@ -78,12 +78,12 @@ export const getColumns = (data: Operation[]): DataGridColumn<Operation>[] => [
       const previousAmount = nextRow.totalAmtAccepted;
 
       if (currentAmount > previousAmount) {
-        return <span className="text-green-600">↑</span>;
+        return <span className="text-success">↑</span>;
       }
       if (currentAmount < previousAmount) {
-        return <span className="text-red-600">↓</span>;
+        return <span className="text-danger">↓</span>;
       }
-      return <span className="text-gray-400">→</span>;
+      return <span className="text-muted">→</span>;
     },
   },
 ];

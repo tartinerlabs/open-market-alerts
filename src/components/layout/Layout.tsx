@@ -22,11 +22,11 @@ export const Layout = ({
   const getContainerClasses = () => {
     switch (variant) {
       case "dashboard":
-        return "min-h-screen min-w-[480px] bg-gray-50";
+        return "min-h-screen min-w-[480px] bg-background";
       case "page":
-        return "min-h-screen bg-gray-50";
+        return "min-h-screen bg-background";
       default:
-        return "min-h-screen bg-gray-50";
+        return "min-h-screen bg-background";
     }
   };
 

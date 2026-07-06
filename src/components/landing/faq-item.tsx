@@ -14,7 +14,7 @@ interface FaqItemProps {
 export const FaqItem = ({ question, children }: FaqItemProps) => {
   return (
     <motion.div
-      className="rounded-lg bg-white p-6 shadow-sm"
+      className="rounded-lg bg-surface-secondary p-6"
       variants={staggerItem}
       whileHover={{
         y: -2,
@@ -22,8 +22,8 @@ export const FaqItem = ({ question, children }: FaqItemProps) => {
       }}
       transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <h4 className="mb-3 text-lg font-semibold text-slate-900">{question}</h4>
-      <div className="text-slate-600">{children}</div>
+      <h4 className="mb-3 text-lg font-semibold text-foreground">{question}</h4>
+      <div className="text-muted">{children}</div>
     </motion.div>
   );
 };
