@@ -5,6 +5,7 @@ import { AlertCircle, Building2, ExternalLink, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/common/loader";
 import { View } from "@/components/settings/view";
+import { WEB_APP_URL } from "@/config";
 import {
   getLatestReverseRepo,
   getRecentReverseRepoTrend,
@@ -35,7 +36,7 @@ export const Popup = () => {
   });
 
   const handleMoreDetails = () => {
-    const webAppUrl = "/";
+    const webAppUrl = `${WEB_APP_URL}/dashboard`;
     if (typeof chrome !== "undefined" && chrome.tabs) {
       chrome.tabs.create({
         url: webAppUrl,

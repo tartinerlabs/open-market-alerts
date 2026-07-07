@@ -7,6 +7,11 @@ import manifest from "./manifest.config";
 
 // https://vite.dev/config/
 export default defineConfig({
+  define: {
+    "import.meta.env.WEB_APP_URL": JSON.stringify(
+      process.env.WEB_APP_URL ?? "http://localhost:5173",
+    ),
+  },
   plugins: [react(), tailwindcss(), crx({ manifest })],
   resolve: {
     alias: {
