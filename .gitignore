@@ -23,43 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Skills
-.agents/
-.claude/skills/
-
-# Agent platform directories
-.adal/
-.augment/
-.bob/
-.codebuddy/
-.commandcode/
-.continue/
-.cortex/
-.crush/
-.cursor/
-.factory/
-.gemini/
-.goose/
-.iflow/
-.junie/
-.kilocode/
-.kiro/
-.kode/
-.mcpjam/
-.mux/
-.neovate/
-.opencode/
-.openhands/
-.pi/
-.pochi/
-.qoder/
-.qwen/
-.roo/
-.trae/
-.vibe/
-.windsurf/
-.zencoder/
-
 # Claude
 .claude/settings.local.json
 
