@@ -4,27 +4,157 @@
 
 @plugin "@tailwindcss/typography";
 
-/*
- * Neutral black-and-white theme.
- * HeroUI's default accent is blue; override it to a near-black so surfaces stay
- * monochrome and color is reserved for meaning (success/danger). Chart series
- * would otherwise all derive from the accent (near-black) and become
- * indistinguishable, so define an explicit greyscale ramp.
- */
-:root,
-[data-theme="light"] {
-  --accent: oklch(0.22 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-
-  --chart-1: oklch(0.2 0 0);
-  --chart-2: oklch(0.34 0 0);
-  --chart-3: oklch(0.48 0 0);
-  --chart-4: oklch(0.64 0 0);
-  --chart-5: oklch(0.78 0 0);
-}
-
 @layer base {
-  body {
-    @apply bg-background text-foreground;
+  /* HeroUI Default Theme */
+  :root {
+    color-scheme: light;
+
+    /* == Common Variables == */
+
+    /* Primitive Colors (Do not change between light and dark) */
+    --white: oklch(100% 0 0);
+    --black: oklch(0% 0 0);
+    --snow: oklch(0.9911 0 0);
+    --eclipse: oklch(0.2103 0.0059 285.89);
+
+    /* Spacing scale */
+    --spacing: 0.25rem;
+
+    /* Border */
+    --border-width: 1px;
+    --field-border-width: 0px;
+    --disabled-opacity: 0.5;
+
+    /* Ring offset - Used for focus ring */
+    --ring-offset-width: 2px;
+
+    /* Cursor */
+    --cursor-interactive: pointer;
+    --cursor-disabled: not-allowed;
+
+    /* Radius */
+    --radius: 0.25rem;
+    --field-radius: 0.25rem;
+
+    /* == Light Theme Variables == */
+
+    /* Base Colors */
+    --background: oklch(97.02% 0.0000 0.00);
+    --foreground: oklch(21.03% 0.0000 0.00);
+
+    /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
+    --surface: oklch(100.00% 0.0000 0.00);
+    --surface-foreground: oklch(21.03% 0.0000 0.00);
+
+    /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) */
+    --overlay: oklch(100.00% 0.0000 0.00);
+    --overlay-foreground: oklch(21.03% 0.0000 0.00);
+
+    --muted: oklch(55.17% 0.0000 0.00);
+    --scrollbar: oklch(87.10% 0.0000 0.00);
+
+    --default: oklch(94.00% 0.0000 0.00);
+    --default-foreground: oklch(21.03% 0.0059 0.00);
+
+    --accent: oklch(0.3 0 0);
+    --accent-foreground: oklch(99.11% 0 0);
+
+    /* Form Field Defaults - Colors */
+    --field-background: oklch(100.00% 0.0000 0.00);
+    --field-foreground: oklch(21.03% 0.0000 0.00);
+    --field-placeholder: oklch(55.17% 0.0000 0.00);
+    --field-border: transparent; /* no border by default on form fields */
+
+    /* Status Colors */
+    --success: oklch(0.6277 0.1604 153.06);
+    --success-foreground: oklch(98% 0.0160 153.06);
+
+    --warning: oklch(0.8446 0.1525 80.6);
+    --warning-foreground: oklch(15% 0.0457 80.60);
+
+    --danger: oklch(0.573 0.2249 21.97);
+    --danger-foreground: oklch(98% 0.0200 21.97);
+
+    /* Component Colors */
+    --segment: oklch(100.00% 0.0000 0.00);
+    --segment-foreground: oklch(21.03% 0.0000 0.00);
+
+    /* Misc Colors */
+    --border: oklch(90.00% 0.0000 0.00);
+    --separator: oklch(92.00% 0.0000 0.00);
+    --focus: oklch(0 0 0);
+    --link: var(--foreground);
+
+    /* Backdrop */
+    --backdrop: rgba(0, 0, 0, 0.5);
+
+    /* Shadows */
+    --surface-shadow:
+      0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+      0 0 1px 0 rgba(0, 0, 0, 0.06);
+    /* Overlay shadow */
+    --overlay-shadow: 0 4px 16px 0 rgba(24, 24, 27, 0.08), 0 8px 24px 0 rgba(24, 24, 27, 0.09);
+    --field-shadow:
+      0 2px 4px 0 rgba(0, 0, 0, 0.04), 0 1px 2px 0 rgba(0, 0, 0, 0.06),
+      0 0 1px 0 rgba(0, 0, 0, 0.06);
+    /* Skeleton Default Global Animation */
+    --skeleton-animation: shimmer; /* shimmer, pulse, none */
+
+    /* Tooltip Default Delays */
+    --tooltip-delay: 1500ms;
+    --tooltip-close-delay: 500ms;
+  }
+
+  .dark,
+  [data-theme="dark"] {
+    color-scheme: dark;
+    /* == Dark Theme Variables == */
+
+    /* Base Colors */
+    --background: oklch(12.00% 0.0000 0.00);
+    --foreground: oklch(99.11% 0.0000 0.00);
+
+    /* Surface: Used for non-overlay components (cards, accordions, disclosure groups) */
+    --surface: oklch(21.03% 0.0000 0.00);
+    --surface-foreground: oklch(99.11% 0.0000 0.00);
+
+    /* Overlay: Used for floating/overlay components (tooltips, popovers, modals, menus) - lighter for contrast */
+    --overlay: oklch(21.03% 0.0000 0.00); /* A bit lighter than surface for visibility in dark mode */
+    --overlay-foreground: oklch(99.11% 0.0000 0.00);
+
+    --muted: oklch(70.50% 0.0000 0.00);
+    --scrollbar: oklch(70.50% 0.0000 0.00);
+
+    --default: oklch(27.40% 0.0000 0.00);
+    --default-foreground: oklch(99.11% 0 0);
+
+    /* Form Field Defaults - Colors (only the ones that are different from light theme) */
+    --field-background: oklch(21.03% 0.0000 0.00);
+    --field-foreground: oklch(99.11% 0.0000 0.00);
+
+    /* Status Colors */
+    --warning: oklch(0.8803 0.1348 86.06);
+    --warning-foreground: oklch(15% 0.0404 86.06);
+
+    --danger: oklch(0.7044 0.1872 23.19);
+    --danger-foreground: oklch(15% 0.0500 23.19);
+
+    /* Component Colors */
+    --segment: oklch(39.64% 0.0000 0.00);
+    --segment-foreground: oklch(99.11% 0.0000 0.00);
+
+    /* Misc Colors */
+    --border: oklch(28.00% 0.0000 0.00);
+    --separator: oklch(25.00% 0.0000 0.00);
+    --focus: oklch(0.9848 0 0);
+    --link: var(--foreground);
+
+    /* Backdrop */
+    --backdrop: rgba(0, 0, 0, 0.6);
+
+    /* Shadows */
+    --surface-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
+    --overlay-shadow: 0 0 0 0 transparent inset; /* No shadow on dark mode */
+    --field-shadow: 0 0 0 0 transparent inset; /* Transparent shadow to allow ring utilities to work */
   }
 }
