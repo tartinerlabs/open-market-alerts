@@ -36,7 +36,7 @@ popup dashboard with user preference management.
 - **SEO**: React Helmet Async for dynamic meta tags
 - **Build Tool**: Vite with hot module replacement
 - **Data Fetching**: TanStack Query for efficient API management
-- **UI Components**: shadcn/ui component library with Radix UI primitives
+- **UI Components**: HeroUI (@heroui/react + @heroui-pro/react) with React Aria primitives
 - **Charts**: Recharts for data visualization
 - **Package Manager**: pnpm
 - **Code Quality**: Biome for linting and formatting
@@ -91,7 +91,7 @@ src/
 │   ├── landing/         # Landing page component
 │   ├── reverse-repo/    # Federal Reserve operations components
 │   ├── settings/        # User preference management components
-│   └── ui/              # shadcn/ui components (excluded from linting)
+│   └── layout/          # Shared layout components
 ├── pages/               # Page components for routing
 │   └── extension.tsx    # Chrome Web Store redirect page
 ├── services/            # API integration and extension services

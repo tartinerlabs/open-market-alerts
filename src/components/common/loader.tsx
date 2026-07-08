@@ -1,5 +1,5 @@
+import { cn } from "@heroui/react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "@/lib/utils";
 
 const loaderVariants = cva(
   "flex items-center justify-center rounded-xl bg-surface-secondary",

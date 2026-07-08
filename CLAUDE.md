@@ -37,7 +37,7 @@ Note: This project uses pnpm as the package manager. Node.js 26 is pinned via `.
     - `settings/`: User preference management components
     - `dashboard/`: Dashboard page component
     - `landing/`: Landing page component
-- **UI Components** (`src/components/ui/`): shadcn/ui component library (excluded from linting)
+- **UI Components**: HeroUI (@heroui/react + @heroui-pro/react) with React Aria primitives
 - **Pages** (`src/pages/`): Page components for different routes
 - **Routing** (`src/AppRouter.tsx`): React Router configuration with route definitions
 - **Popup Component** (`src/popup.tsx`): Chrome extension popup dashboard with market data and settings
@@ -87,7 +87,7 @@ Note: This project uses pnpm as the package manager. Node.js 26 is pinned via `.
 ### Styling
 
 - Tailwind CSS for styling with custom configuration
-- UI components from shadcn/ui library (Avatar, Tooltip, Switch, etc.)
+- UI components from HeroUI library (@heroui/react, @heroui-pro/react)
 - Responsive design patterns (mobile-first grid layouts)
 - Gradient backgrounds and modern card layouts
 - Chrome Web Store badge integration
@@ -115,7 +115,6 @@ Note: This project uses pnpm as the package manager. Node.js 26 is pinned via `.
     - `common/`: Shared components (loader, metric-card)
     - `reverse-repo/`: Federal Reserve operations components
     - `settings/`: User preference management components
-    - `ui/`: shadcn/ui component library (excluded from linting)
 - Types mirror API response structure
 
 ## Commit Conventions & Release Management
@@ -186,7 +185,6 @@ The build process creates both web and extension builds:
 
 - When creating git commits, use short commit messages (title only) without detailed descriptions
 - Follow the conventional commit format but keep messages concise
-- NEVER modify files in `src/components/ui/` - these are from shadcn/ui library and should not be touched
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:970c3bf2 -->
 ## Beads Issue Tracker
