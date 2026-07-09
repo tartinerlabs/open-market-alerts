@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "pnpm --filter @tartinerlabs/extensions dev",
-    "build": "pnpm --filter @tartinerlabs/extensions build",
-    "typecheck": "pnpm --filter @tartinerlabs/extensions typecheck",
-    "preview": "pnpm --filter @tartinerlabs/extensions preview",
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "preview": "turbo run preview",
     "lint": "biome check --write .",
     "prepare": "husky",
     "release": "semantic-release"
@@ -29,7 +29,8 @@
     "lint-staged": "17.0.8",
     "prettier": "3.9.4",
     "prettier-plugin-tailwindcss": "0.8.0",
-    "semantic-release": "25.0.5"
+    "semantic-release": "25.0.5",
+    "turbo": "2.10.4"
   },
   "lint-staged": {
     "*.{js,ts,tsx,jsx,json,jsonc}": "biome check --write --no-errors-on-unmatched"
