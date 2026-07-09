@@ -5,6 +5,7 @@
     "build": {
       "outputs": ["dist/**"],
       "env": ["WEB_APP_URL"]
-    }
+    },
+    "typecheck": {}
   }
 }

@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "typecheck": "pnpm --filter @tartinerlabs/extensions typecheck",
+    "typecheck": "turbo run typecheck",
     "preview": "turbo run preview",
     "lint": "biome check --write .",
     "prepare": "husky",
