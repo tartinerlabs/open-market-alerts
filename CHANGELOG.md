@@ -1,3 +1,17 @@
+## [1.5.0](https://github.com/ruchernchong/open-market-alerts/compare/v1.4.0...v1.5.0) (2026-07-09)
+
+### Features
+
+* add manual test notification in extension settings ([70d260b](https://github.com/ruchernchong/open-market-alerts/commit/70d260b0717844a29ecfc3540dd5c577b13c76e1))
+* setup Turborepo ([9d92731](https://github.com/ruchernchong/open-market-alerts/commit/9d9273177bf349fd403c871549af0fa30d60db7f))
+
+### Bug Fixes
+
+* adapt code to dependency major upgrades ([be35de4](https://github.com/ruchernchong/open-market-alerts/commit/be35de4db81bfab07f476191591ad57f8e1aedad))
+* fix biome lint errors in CI ([ca41cd2](https://github.com/ruchernchong/open-market-alerts/commit/ca41cd2e618b142ca7f57ddb753be2f9360c36b7))
+* pin conventionalcommits preset for notes ([2b590b7](https://github.com/ruchernchong/open-market-alerts/commit/2b590b7db31ed67a80a9a28b005c2582381f5595))
+* point More Details button to deployed web app dashboard ([695a033](https://github.com/ruchernchong/open-market-alerts/commit/695a033b35e81cffe1904643c04db84f6a52cc6f))
+
 ## [1.4.0](https://github.com/ruchernchong/fed-open-market-alerts/compare/v1.3.1...v1.4.0) (2025-08-24)
 
 ### Features
