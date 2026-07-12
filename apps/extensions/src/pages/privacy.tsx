@@ -28,8 +28,9 @@ export const Privacy = () => {
 
           <h2>Information We Collect</h2>
           <p>
-            Fed Open Market Alerts does not collect, store, or transmit any
-            personal information. The application only:
+            Fed Open Market Alerts does not collect account details, email
+            addresses, or other directly identifying personal information. The
+            application only:
           </p>
           <ul>
             <li>
@@ -43,20 +44,27 @@ export const Privacy = () => {
               Stores timestamps of last data updates to prevent duplicate
               notifications
             </li>
+            <li>
+              Stores an anonymous browser push endpoint and encryption keys when
+              you enable browser alerts
+            </li>
           </ul>
 
           <h2>Data Storage</h2>
           <p>
-            All user preferences and settings are stored locally on your device
-            using browser storage. No data is transmitted to external servers
-            except for fetching public Federal Reserve data.
+            Extension preferences remain in browser storage. When you enable
+            browser alerts on the web dashboard, the app stores the browser push
+            endpoint and encryption keys with our notification service. These
+            values are used only to deliver Fed operation alerts and can be
+            removed at any time by selecting “Stop alerts” on the dashboard.
           </p>
 
           <h2>Third-Party Services</h2>
           <p>
             This application fetches public data from the Federal Reserve Bank
-            of New York API (markets.newyorkfed.org). This is the only external
-            service we communicate with.
+            of New York API (markets.newyorkfed.org). Browser-alert
+            subscriptions are stored with our notification service so that we
+            can deliver the alerts you request.
           </p>
 
           <h2>Chrome Extension Permissions</h2>

@@ -2,6 +2,14 @@
   "$schema": "https://v2-10-4.turborepo.dev/schema.json",
   "ui": "tui",
   "envMode": "strict",
+  "globalEnv": [
+    "CRON_SECRET",
+    "DATABASE_URL",
+    "VAPID_PRIVATE_KEY",
+    "VAPID_PUBLIC_KEY",
+    "VAPID_SUBJECT",
+    "WEB_APP_URL"
+  ],
   "tasks": {
     "dev": {
       "cache": false,

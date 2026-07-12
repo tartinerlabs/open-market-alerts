@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "pnpm run typecheck:api && turbo run typecheck",
+    "typecheck:api": "tsc --project tsconfig.api.json",
+    "test": "pnpm run test:api && pnpm --filter @tartinerlabs/extensions test",
+    "test:api": "vitest run --config vitest.api.config.ts",
     "preview": "turbo run preview",
     "lint": "biome check --write .",
     "prepare": "husky",
@@ -23,6 +26,9 @@
     "@semantic-release/git": "10.0.1",
     "@semantic-release/github": "12.0.9",
     "@semantic-release/release-notes-generator": "14.1.1",
+    "@types/node": "26.1.0",
+    "@types/web-push": "3.6.4",
+    "@vercel/node": "5.8.23",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "globals": "17.7.0",
     "husky": "9.1.7",
@@ -30,7 +36,8 @@
     "prettier": "3.9.4",
     "prettier-plugin-tailwindcss": "0.8.0",
     "semantic-release": "25.0.5",
-    "turbo": "2.10.4"
+    "turbo": "2.10.4",
+    "vitest": "4.1.10"
   },
   "lint-staged": {
     "*.{js,ts,tsx,jsx,json,jsonc}": "biome check --write --no-errors-on-unmatched"
@@ -42,5 +49,9 @@
       "version": "^26.0.0",
       "onFail": "download"
     }
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "1.1.0",
+    "web-push": "3.6.7"
   }
 }
