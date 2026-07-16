@@ -7,9 +7,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Project Overview
 
 Fed Open Market Alerts monitors the New York Fed's reverse-repo operations and alerts on new data. A single
-Vite bundle serves two runtime modes from the same code: a multi-page React Router web app, and a Manifest V3
-Chrome extension (popup + background service worker) built via `@crxjs/vite-plugin`. `main.tsx` picks the mode
-at runtime — no separate build targets.
+Vite bundle serves a multi-page React Router web app and a Manifest V3 Chrome extension built via
+`@crxjs/vite-plugin`. The extension uses the same bundle for its hashless popup, hash-routed full-page dashboard,
+and background service worker. `main.tsx` picks the UI mode at runtime — no separate build targets.
 
 ## Monorepo Layout
 
@@ -25,23 +25,22 @@ Run from the repo root:
 
 - `pnpm dev` — `turbo run dev` → `vite` (dev server + extension HMR)
 - `pnpm build` — `turbo run build` → `vite build` (produces the MV3 extension via crxjs)
-- `pnpm typecheck` — `turbo run typecheck` → `tsc --noEmit` (no project references; there is no `tsc -b`)
+- `pnpm typecheck` — API `tsc`, then `turbo run typecheck` → extension `tsc --noEmit` (no project references)
+- `pnpm test` — API Vitest suite, then the extension's colocated Vitest/React Testing Library tests
 - `pnpm preview` — `turbo run preview` → `vite preview`
 - `pnpm lint` — `biome check --write .` (lint + format with autofix, run at root, not via turbo)
 - `pnpm release` — `semantic-release` (normally CI-only)
 
-Notes:
-
-- **There are no tests** — no test runner, no `test` script, no `*.test.*` files. Do not assume a test step exists.
-- Node 26 (`.node-version`, `devEngines.runtime ^26.0.0`); pnpm `11.10.0` (`packageManager`).
+Node 26 (`.node-version`, `devEngines.runtime ^26.0.0`); pnpm `11.10.0` (`packageManager`).
 
 ## Architecture
 
 ### Dual runtime mode
 
-`main.tsx` calls `isExtensionPopup()` (checks `chrome.runtime.id` + `chrome-extension:` protocol). If true it renders
-`Popup` (`popup.tsx`); otherwise it renders `AppRouter` (the web app). A single `QueryClient` is created here and
-provided to both.
+`main.tsx` calls `isExtensionPopup()`. A hashless `chrome-extension:` page with `chrome.runtime.id` renders `Popup`;
+an extension URL whose hash starts with `#/` renders `AppRouter` with `HashRouter`; normal HTTP(S) pages render
+`AppRouter` with `BrowserRouter`. The popup's More Details action opens the packaged `index.html#/dashboard` via
+`chrome.runtime.getURL()`. A single `QueryClient` is created in `main.tsx` and provided to both surfaces.
 
 ### Services (`services/`)
 
@@ -77,10 +76,10 @@ by design, since they're only reached from popup/settings/background contexts.
 ### Routing & config
 
 - Routes (`AppRouter.tsx`): `/` (Landing), `/dashboard`, `/extension`, `/privacy-policy`, `/terms-of-service`,
-  `/contact`. SEO via React Helmet Async.
-- `config/index.ts` exposes `WEB_APP_URL` / `EXTENSION_*` from `import.meta.env`. `vite.config.ts` `define`s
-  `WEB_APP_URL` (default `http://localhost:5173`) and sets custom `manualChunks` (charts, heroui, tanstack, motion,
-  react-vendor, vendor).
+  `/contact`. Browser builds use history paths; extension pages use hash paths. SEO via React Helmet Async. The
+  web-only browser-push control is hidden in the extension dashboard.
+- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `vite.config.ts` sets custom `manualChunks`
+  (charts, heroui, tanstack, motion, react-vendor, vendor).
 - `manifest.config.ts` (crxjs): MV3, `permissions: [notifications, alarms, storage]`, `host_permissions:
   [markets.newyorkfed.org, localhost]`, `background.service_worker: src/background.ts`.
 

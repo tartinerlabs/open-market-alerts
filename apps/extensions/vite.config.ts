@@ -10,11 +10,6 @@ export default defineConfig(({ mode }) => {
   const isExtensionBuild = mode !== "web";
 
   return {
-    define: {
-      "import.meta.env.WEB_APP_URL": JSON.stringify(
-        process.env.WEB_APP_URL ?? "http://localhost:5173",
-      ),
-    },
     plugins: [
       react(),
       tailwindcss(),

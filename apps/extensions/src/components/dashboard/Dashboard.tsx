@@ -1,10 +1,13 @@
 import { Helmet } from "react-helmet-async";
+import { isExtensionContext } from "@/extension-routing";
 import { Layout } from "../layout/Layout";
 import { Latest } from "../reverse-repo/latest";
 import { Trend } from "../reverse-repo/trend";
 import { BrowserAlerts } from "./browser-alerts";
 
 export const Dashboard = () => {
+  const showBrowserAlerts = !isExtensionContext();
+
   return (
     <>
       <Helmet>
@@ -16,7 +19,7 @@ export const Dashboard = () => {
       </Helmet>
 
       <Layout variant="dashboard">
-        <BrowserAlerts />
+        {showBrowserAlerts ? <BrowserAlerts /> : null}
         <Latest />
         <Trend />
       </Layout>

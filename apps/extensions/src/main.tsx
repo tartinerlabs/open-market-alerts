@@ -4,18 +4,10 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./globals.css";
 import { AppRouter } from "./AppRouter.tsx";
+import { isExtensionPopup } from "./extension-routing";
 import { Popup } from "./popup";
 
 const queryClient = new QueryClient();
-
-const isExtensionPopup = () => {
-  return (
-    typeof chrome !== "undefined" &&
-    chrome.runtime &&
-    chrome.runtime.id &&
-    window.location.protocol === "chrome-extension:"
-  );
-};
 
 const MainComponent = isExtensionPopup() ? Popup : AppRouter;
 

@@ -2,6 +2,17 @@
 
 This project uses **bd** (beads) for issue tracking. Run `bd prime` for full workflow context.
 
+## Project Runtime
+
+- A single Vite/React bundle serves the web app and Manifest V3 Chrome extension. Hashless `chrome-extension:`
+  pages render the popup, hash routes render the full extension app with `HashRouter`, and HTTP(S) pages use
+  `BrowserRouter`.
+- The popup's More Details action opens the packaged `index.html#/dashboard` with `chrome.runtime.getURL()`; it
+  does not require a hosted web deployment or a `WEB_APP_URL` setting.
+- The browser-push control is web-only and is hidden in the extension dashboard.
+- Run `pnpm test`, `pnpm typecheck`, and `pnpm build` to validate application changes. Extension tests use Vitest
+  and React Testing Library.
+
 > **Architecture in one line:** Issues live in a local Dolt database
 > (`.beads/dolt/`); cross-machine sync uses `bd dolt push/pull` (a
 > git-compatible protocol), stored under `refs/dolt/data` on your git

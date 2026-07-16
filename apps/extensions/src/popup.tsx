@@ -5,7 +5,7 @@ import { AlertCircle, Building2, ExternalLink, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Loader } from "@/components/common/loader";
 import { View } from "@/components/settings/view";
-import { WEB_APP_URL } from "@/config";
+import { getDashboardUrl } from "@/extension-routing";
 import {
   getLatestReverseRepo,
   getRecentReverseRepoTrend,
@@ -36,14 +36,16 @@ export const Popup = () => {
   });
 
   const handleMoreDetails = () => {
-    const webAppUrl = `${WEB_APP_URL}/dashboard`;
+    const dashboardUrl = getDashboardUrl();
+
     if (typeof chrome !== "undefined" && chrome.tabs) {
-      chrome.tabs.create({
-        url: webAppUrl,
+      void chrome.tabs.create({
+        url: dashboardUrl,
       });
-    } else {
-      window.open(webAppUrl, "_blank");
+      return;
     }
+
+    window.open(dashboardUrl, "_blank");
   };
 
   const formatCurrency = (amount: number) =>
