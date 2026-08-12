@@ -22,7 +22,7 @@ jobs:
       # pnpm v11 unified action: installs pnpm + Node (from devEngines.runtime)
       # + project deps (frozen in CI) in one step.
       - name: Setup pnpm, Node & install
-        uses: pnpm/setup@5d160c5bc68a09337ad0d5654e237e03253b5879 # v1.0.0
+        uses: pnpm/setup@4700d737c3d7a2e7199f3d42a920f0bf7f34e411 # v2.0.1
         with:
           cache: true
         env:
@@ -60,7 +60,7 @@ jobs:
           fetch-depth: 0
 
       - name: Setup pnpm, Node & install
-        uses: pnpm/setup@5d160c5bc68a09337ad0d5654e237e03253b5879 # v1.0.0
+        uses: pnpm/setup@4700d737c3d7a2e7199f3d42a920f0bf7f34e411 # v2.0.1
         env:
           HEROUI_AUTH_TOKEN: ${{ secrets.HEROUI_AUTH_TOKEN }}
 
