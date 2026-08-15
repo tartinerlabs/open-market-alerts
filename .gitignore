@@ -12,6 +12,10 @@ dist
 dist-ssr
 *.local
 
+# WXT
+.wxt
+.output
+
 # Turborepo
 .turbo
 
