@@ -82,8 +82,8 @@ unguarded by design, since they're only reached from popup/settings/background c
 - Routes (`AppRouter.tsx`): `/` (Landing), `/dashboard`, `/extension`, `/privacy-policy`, `/terms-of-service`,
   `/contact`. Browser builds use history paths; extension pages use hash paths. SEO via React Helmet Async. The
   web-only browser-push control is hidden in the extension dashboard.
-- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `wxt.config.ts` and `vite.web.config.ts` share
-  custom `manualChunks` (charts, heroui, tanstack, motion, react-vendor, vendor).
+- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `vite.web.config.ts` sets custom `manualChunks`
+  (charts, heroui, tanstack, motion, react-vendor, vendor). `wxt.config.ts` only adds Tailwind via `vite()`.
 - `wxt.config.ts` manifest: MV3, `permissions: [notifications, alarms, storage]`, `host_permissions:
   [markets.newyorkfed.org, localhost]`. Popup/background come from entrypoints. Load unpacked from
   `.output/chrome-mv3`.
