@@ -84,9 +84,9 @@ unguarded by design, since they're only reached from popup/settings/background c
   web-only browser-push control is hidden in the extension dashboard.
 - `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `vite.web.config.ts` sets custom `manualChunks`
   (charts, heroui, tanstack, motion, react-vendor, vendor). `wxt.config.ts` only adds Tailwind via `vite()`.
-- `wxt.config.ts` manifest: MV3, `permissions: [notifications, alarms, storage]`, `host_permissions:
-  [markets.newyorkfed.org, localhost]`. Popup/background come from entrypoints. Load unpacked from
-  `.output/chrome-mv3`.
+- `wxt.config.ts` manifest only sets store `name`, `permissions`, and `host_permissions`. Description comes from
+  `package.json`; icons are auto-discovered from `public/icon-*.png`. Popup/background come from entrypoints. Load
+  unpacked from `.output/chrome-mv3`.
 
 ## Tooling & Conventions
 

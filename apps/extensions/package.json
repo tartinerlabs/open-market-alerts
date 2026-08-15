@@ -1,6 +1,7 @@
 {
   "name": "@tartinerlabs/extensions",
   "version": "1.5.0",
+  "description": "Monitor Federal Reserve Open Market Operations with automated alerts",
   "private": true,
   "type": "module",
   "scripts": {
