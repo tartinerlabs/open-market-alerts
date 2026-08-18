@@ -40,7 +40,7 @@ popup dashboard with user preference management.
 - **Charts**: Recharts for data visualization
 - **Package Manager**: pnpm
 - **Code Quality**: Biome for linting and formatting
-- **Extension**: Chrome Manifest V3 with @crxjs/vite-plugin
+- **Extension**: Chrome Manifest V3 with WXT (`wxt` + `@wxt-dev/module-react`)
 
 ## Getting Started
 
@@ -63,8 +63,11 @@ pnpm install
 ### Development
 
 ```bash
-# Start development server
+# Start the WXT extension dev server
 pnpm dev
+
+# Start the web SPA (Vercel/local dashboard)
+pnpm --filter @tartinerlabs/extensions dev:web
 
 # Run linting with automatic fixes
 pnpm lint
@@ -79,34 +82,35 @@ pnpm preview
 pnpm release
 ```
 
-The application will be available at `http://localhost:5173`
+The web SPA is available at `http://localhost:5173` when using `dev:web`. `pnpm dev` runs the WXT extension
+developer workflow.
 
 ## Project Structure
 
 ```
-src/
-├── components/           # React components
-│   ├── common/          # Shared components (loader, metric-card)
-│   ├── dashboard/       # Dashboard page component
-│   ├── landing/         # Landing page component
-│   ├── reverse-repo/    # Federal Reserve operations components
-│   ├── settings/        # User preference management components
-│   └── layout/          # Shared layout components
-├── pages/               # Page components for routing
-│   └── extension.tsx    # Chrome Web Store redirect page
-├── services/            # API integration and extension services
-│   ├── reverse-repo.ts  # Fed markets API integration
-│   ├── notifications.ts # Chrome extension notifications
-│   ├── scheduler.ts     # Automated data check scheduling
-│   └── storage.ts      # Chrome extension storage management
-├── types/              # TypeScript type definitions
-│   ├── reverse-repo.ts  # Fed markets API types
-│   └── preferences.ts   # User preference types
-├── lib/                # Utility functions
-├── assets/             # Static assets
-├── AppRouter.tsx       # React Router configuration
-├── popup.tsx           # Chrome extension popup dashboard
-└── background.ts       # Chrome extension service worker
+apps/extensions/
+├── wxt.config.ts            # WXT extension build
+├── vite.web.config.ts       # Vite SPA / Vercel web build
+├── src/
+│   ├── entrypoints/         # WXT popup, dashboard, background
+│   ├── components/          # React components
+│   │   ├── common/          # Shared components (loader, metric-card)
+│   │   ├── dashboard/       # Dashboard page component
+│   │   ├── landing/         # Landing page component
+│   │   ├── reverse-repo/    # Federal Reserve operations components
+│   │   ├── settings/        # User preference management components
+│   │   └── layout/          # Shared layout components
+│   ├── pages/               # Page components for routing
+│   │   └── extension.tsx    # Chrome Web Store redirect page
+│   ├── services/            # API integration and extension services
+│   │   ├── reverse-repo.ts  # Fed markets API integration
+│   │   ├── notifications.ts # Extension notifications
+│   │   ├── scheduler.ts     # Automated data check scheduling
+│   │   └── storage.ts       # Extension storage management
+│   ├── types/               # TypeScript type definitions
+│   ├── AppRouter.tsx        # React Router configuration
+│   ├── popup.tsx            # Chrome extension popup dashboard
+│   └── main.tsx             # Web SPA entry (BrowserRouter)
 ```
 
 ## API Integration
@@ -121,7 +125,7 @@ The application fetches data from the New York Federal Reserve Open Market Opera
 
 The project includes Chrome extension support with automated notifications and user management:
 
-- **Manifest**: V3 extension defined in `manifest.config.ts`
+- **Manifest**: V3 extension defined in `wxt.config.ts` plus file-based entrypoints
 - **Permissions**: Access to `markets.newyorkfed.org`, localhost, and notifications
 - **Popup Dashboard**: Dedicated `popup.tsx` component with market data and settings access
 - **User Preferences**: Configurable settings via `src/components/settings/view.tsx` component
@@ -144,7 +148,7 @@ To load the extension in development:
 1. Run `pnpm build`
 2. Open Chrome and go to `chrome://extensions/`
 3. Enable "Developer mode"
-4. Click "Load unpacked" and select the `dist` folder
+4. Click "Load unpacked" and select `apps/extensions/.output/chrome-mv3`
 
 ## Development Patterns
 
@@ -171,11 +175,10 @@ To load the extension in development:
 
 ## Build Process
 
-The build creates both web and extension builds:
+The repo produces two production outputs:
 
-1. TypeScript compilation (`tsc -b`)
-2. Vite build with React and Tailwind plugins
-3. Chrome extension manifest generation
+1. Extension: `pnpm build` → WXT writes `.output/chrome-mv3`
+2. Web SPA: `pnpm --filter @tartinerlabs/extensions build:web` → Vite writes `apps/extensions/dist` (Vercel)
 
 ## Contributing
 

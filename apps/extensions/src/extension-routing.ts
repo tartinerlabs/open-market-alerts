@@ -1,10 +1,12 @@
+import { browser } from "wxt/browser";
+
 type ExtensionLocation = Pick<Location, "hash" | "protocol">;
-type ExtensionRuntime = Pick<typeof chrome.runtime, "getURL" | "id">;
+type ExtensionRuntime = Pick<typeof browser.runtime, "getURL" | "id">;
 
 const getRuntime = (): ExtensionRuntime | undefined => {
-  if (typeof chrome === "undefined" || !chrome.runtime) return undefined;
+  if (!browser.runtime) return undefined;
 
-  return chrome.runtime;
+  return browser.runtime;
 };
 
 export const isExtensionContext = (
@@ -12,17 +14,12 @@ export const isExtensionContext = (
   runtime: ExtensionRuntime | undefined = getRuntime(),
 ) => Boolean(runtime?.id) && location.protocol === "chrome-extension:";
 
-export const isExtensionPopup = (
-  location: ExtensionLocation = window.location,
-  runtime: ExtensionRuntime | undefined = getRuntime(),
-) => isExtensionContext(location, runtime) && !location.hash.startsWith("#/");
-
 export const getDashboardUrl = (
   runtime: ExtensionRuntime | undefined = getRuntime(),
 ) => {
   if (!runtime?.id) return "/dashboard";
 
-  const dashboardUrl = new URL(runtime.getURL("index.html"));
+  const dashboardUrl = new URL(runtime.getURL("/dashboard.html"));
   dashboardUrl.hash = "/dashboard";
 
   return dashboardUrl.href;

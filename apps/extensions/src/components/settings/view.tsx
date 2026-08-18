@@ -2,6 +2,7 @@ import { Button, Separator, Spinner, Switch, Tooltip } from "@heroui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowLeft, Bell, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
+import { browser } from "wxt/browser";
 import {
   getTestOperation,
   showFedDataNotification,
@@ -28,7 +29,7 @@ export const View = ({ onBack }: ViewProps) => {
   const { data: preferences = DEFAULT_PREFERENCES } = useQuery({
     queryKey: ["user-preferences"],
     queryFn: getUserPreferences,
-    enabled: typeof chrome !== "undefined" && !!chrome.storage,
+    enabled: Boolean(browser.storage),
   });
 
   useEffect(() => {

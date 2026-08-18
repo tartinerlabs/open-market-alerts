@@ -6,10 +6,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Fed Open Market Alerts monitors the New York Fed's reverse-repo operations and alerts on new data. A single
-Vite bundle serves a multi-page React Router web app and a Manifest V3 Chrome extension built via
-`@crxjs/vite-plugin`. The extension uses the same bundle for its hashless popup, hash-routed full-page dashboard,
-and background service worker. `main.tsx` picks the UI mode at runtime — no separate build targets.
+Fed Open Market Alerts monitors the New York Fed's reverse-repo operations and alerts on new data. The Chrome
+extension is a WXT app (`apps/extensions`, package `@tartinerlabs/extensions`) with file-based entrypoints for the
+popup, an unlisted hash-routed dashboard, and a background service worker. A separate Vite config
+(`vite.web.config.ts`) builds the Vercel SPA from root `index.html` + `src/main.tsx`.
 
 ## Monorepo Layout
 
@@ -23,11 +23,13 @@ code lives in `apps/extensions/` (package `@tartinerlabs/extensions`). `packages
 
 Run from the repo root:
 
-- `pnpm dev` — `turbo run dev` → `vite` (dev server + extension HMR)
-- `pnpm build` — `turbo run build` → `vite build` (produces the MV3 extension via crxjs)
+- `pnpm dev` — `turbo run dev` → `wxt` (extension dev server + HMR)
+- `pnpm build` — `turbo run build` → `wxt build` (MV3 extension in `.output/chrome-mv3`)
+- `pnpm --filter @tartinerlabs/extensions dev:web` — Vite SPA at `http://localhost:5173`
+- `pnpm --filter @tartinerlabs/extensions build:web` — Vite web build to `apps/extensions/dist` (Vercel)
 - `pnpm typecheck` — API `tsc`, then `turbo run typecheck` → extension `tsc --noEmit` (no project references)
 - `pnpm test` — API Vitest suite, then the extension's colocated Vitest/React Testing Library tests
-- `pnpm preview` — `turbo run preview` → `vite preview`
+- `pnpm preview` — `turbo run preview` → `wxt preview`
 - `pnpm lint` — `biome check --write .` (lint + format with autofix, run at root, not via turbo)
 - `pnpm release` — `semantic-release` (normally CI-only)
 
@@ -35,12 +37,13 @@ Node 26 (`.node-version`, `devEngines.runtime ^26.0.0`); pnpm `11.10.0` (`packag
 
 ## Architecture
 
-### Dual runtime mode
+### Extension vs web
 
-`main.tsx` calls `isExtensionPopup()`. A hashless `chrome-extension:` page with `chrome.runtime.id` renders `Popup`;
-an extension URL whose hash starts with `#/` renders `AppRouter` with `HashRouter`; normal HTTP(S) pages render
-`AppRouter` with `BrowserRouter`. The popup's More Details action opens the packaged `index.html#/dashboard` via
-`chrome.runtime.getURL()`. A single `QueryClient` is created in `main.tsx` and provided to both surfaces.
+WXT entrypoints in `src/entrypoints/` each mount their own UI: popup → `Popup`, unlisted `dashboard.html` →
+`AppRouter` with `HashRouter`, background → `defineBackground`. The web SPA (`src/main.tsx`) always mounts
+`AppRouter` with `BrowserRouter`. Shared `AppProviders` wraps TanStack Query. The popup's More Details action opens
+`dashboard.html#/dashboard` via `browser.runtime.getURL()`. Extension APIs use `browser` from `wxt/browser`, not
+`chrome.*`.
 
 ### Services (`services/`)
 
@@ -49,45 +52,48 @@ Pure/side-effecting modules the popup, web app, and background worker share:
 - `reverse-repo.ts` — Fed data. `FED_MARKETS_API_BASE = https://markets.newyorkfed.org/api/rp/reverserepo/all/results`;
   `getLastTwoWeeks()` fetches `/lastTwoWeeks.json`. Helpers `getLatestReverseRepo()` / `getRecentReverseRepoTrend()`.
   Plain `fetch`, no auth.
-- `scheduler.ts` — `chrome.alarms` scheduling. `SCHEDULE_CONFIG` = `CHECK_HOUR: 13`, `CHECK_MINUTE: 20`,
+- `scheduler.ts` — `browser.alarms` scheduling. `SCHEDULE_CONFIG` = `CHECK_HOUR: 13`, `CHECK_MINUTE: 20`,
   `EST_UTC_OFFSET: -5`; `isWeekday()` gates Mon–Fri; `scheduleNextFedDataCheck()` creates the `fedDataCheck` alarm.
-- `notifications.ts` — builds/shows `chrome.notifications`; includes a test-operation builder for the settings panel.
-- `storage.ts` — wraps `chrome.storage.local`. Keys: `last_updated_timestamp`, `has_unread_notification`,
+- `notifications.ts` — builds/shows `browser.notifications`; includes a test-operation builder for the settings panel.
+- `storage.ts` — wraps `browser.storage.local`. Keys: `last_updated_timestamp`, `has_unread_notification`,
   `user_preferences`.
 
-### Background worker (`background.ts`, MV3 service worker)
+### Background worker (`entrypoints/background.ts`, MV3 service worker)
 
 `checkFedData()` fetches the latest operation and compares `lastUpdated` against the stored timestamp; on change it
 notifies **only if** `preferences.notificationsEnabled && preferences.immediateNotifications`, then stores the new
 timestamp and sets the unread flag. `updateBadge()` shows a red "!" badge when unread. Listeners: `onStartup` /
 `onInstalled` (schedule + badge), `alarms.onAlarm` (check + reschedule), `runtime.onMessage` for
-`{action: "checkFedDataNow"}` (manual check), `storage.onChanged` (refresh badge).
+`{action: "checkFedDataNow"}` (manual check), `storage.onChanged` (refresh badge). APIs are registered inside
+`defineBackground`.
 
 ### Data fetching
 
 Components call TanStack Query's `useQuery` directly with the service functions as `queryFn` — there is no custom-hook
 layer. Query keys in use: `["latest-reverse-repo"]`, `["reverse-repo-trend"]`, `["user-preferences"]`. Settings
 (`settings/view.tsx`) write preferences via the storage service then `queryClient.setQueryData(["user-preferences"], …)`
-(cache-write, not `useMutation`), gated with `enabled: typeof chrome !== "undefined" && !!chrome.storage`.
+(cache-write, not `useMutation`), gated with `enabled: Boolean(browser.storage)`.
 
-Chrome API guards live at the call sites (`main.tsx`, popup, settings); the service modules call `chrome.*` unguarded
-by design, since they're only reached from popup/settings/background contexts.
+Extension API guards live at the call sites (popup, settings, routing); the service modules call `browser.*`
+unguarded by design, since they're only reached from popup/settings/background contexts.
 
 ### Routing & config
 
 - Routes (`AppRouter.tsx`): `/` (Landing), `/dashboard`, `/extension`, `/privacy-policy`, `/terms-of-service`,
   `/contact`. Browser builds use history paths; extension pages use hash paths. SEO via React Helmet Async. The
   web-only browser-push control is hidden in the extension dashboard.
-- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `vite.config.ts` sets custom `manualChunks`
-  (charts, heroui, tanstack, motion, react-vendor, vendor).
-- `manifest.config.ts` (crxjs): MV3, `permissions: [notifications, alarms, storage]`, `host_permissions:
-  [markets.newyorkfed.org, localhost]`, `background.service_worker: src/background.ts`.
+- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `vite.web.config.ts` sets custom `manualChunks`
+  (charts, heroui, tanstack, motion, react-vendor, vendor). `wxt.config.ts` only adds Tailwind via `vite()`.
+- `wxt.config.ts` manifest only sets store `name`, `permissions`, and `host_permissions`. Description comes from
+  `package.json`; icons are auto-discovered from `public/icon-*.png`. Popup/background come from entrypoints. Load
+  unpacked from `.output/chrome-mv3`.
 
 ## Tooling & Conventions
 
-- **Biome** (`biome.json`): recommended rules, double quotes, space indent, organize-imports on; excludes `**/dist`
-  and `**/*.svg`; uses `.gitignore` via VCS integration.
-- **TypeScript**: strict, `verbatimModuleSyntax`, path alias `@/* → apps/extensions/src/*`.
+- **Biome** (`biome.json`): recommended rules, double quotes, space indent, organize-imports on; excludes `**/dist`,
+  `.wxt`, `.output`, and `**/*.svg`; uses `.gitignore` via VCS integration.
+- **TypeScript**: strict, `verbatimModuleSyntax`. Extension `tsconfig.json` extends `./.wxt/tsconfig.json` (WXT maps
+  `@` → `srcDir`). The web Vite config repeats the `@` alias.
 - **UI**: HeroUI v3 (`@heroui/react` + `@heroui-pro/react`) on Tailwind CSS v4 (no v3). v3 uses compound components
   (e.g. `Sheet.Trigger`) and `onPress` (not `onClick`); no Provider needed.
 - **Commits & releases**: Conventional Commits + semantic-release. `main` produces beta prereleases. When creating
@@ -106,8 +112,8 @@ then a `release` job (`pnpm build` + `pnpm release`). All actions are SHA-pinned
   actually fires an hour off in summer (EDT).
 - **`dailySummary`**: exists in `types/preferences.ts` and the settings UI but has **no implementing logic** in
   `background.ts` — only `immediateNotifications` gates notifications. The setting is currently non-functional.
-- **`App.tsx`**: dead/legacy — not imported anywhere (`main.tsx` renders `Popup`/`AppRouter`; `Dashboard` renders
-  `Latest`/`Trend` itself).
+- **`App.tsx`**: dead/legacy — not imported anywhere (popup/dashboard entrypoints and web `main.tsx` render
+  `Popup`/`AppRouter`; `Dashboard` renders `Latest`/`Trend` itself).
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:970c3bf2 -->
 ## Beads Issue Tracker

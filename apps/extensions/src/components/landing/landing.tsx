@@ -400,7 +400,8 @@ export const Landing = () => {
             <div className="mx-auto grid max-w-7xl gap-14 px-5 py-16 sm:px-8 sm:py-20 lg:grid-cols-[0.82fr_1.18fr] lg:items-center lg:py-24">
               <motion.div {...motionProps}>
                 <p className="text-xs font-semibold tracking-[0.2em] text-white/65 uppercase">
-                  Latest operation · {formatOperationDate(operation.operationDate)}
+                  Latest operation ·{" "}
+                  {formatOperationDate(operation.operationDate)}
                 </p>
                 <p className="mt-7 text-6xl leading-none font-bold tracking-[-0.055em] tabular-nums sm:text-7xl lg:text-8xl">
                   {formatCompactCurrency(operation.totalAmtAccepted)}
@@ -428,8 +429,8 @@ export const Landing = () => {
                   without the noise.
                 </h1>
                 <p className="mt-6 max-w-lg text-base leading-7 text-white/68 sm:text-lg">
-                  Get a quiet browser alert when new reverse repo data lands—then
-                  inspect the full operation in seconds.
+                  Get a quiet browser alert when new reverse repo data
+                  lands—then inspect the full operation in seconds.
                 </p>
 
                 <div className="mt-8">
@@ -443,7 +444,10 @@ export const Landing = () => {
                     "Free forever",
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-2">
-                      <Check className="size-4 text-success" aria-hidden="true" />
+                      <Check
+                        className="size-4 text-success"
+                        aria-hidden="true"
+                      />
                       {item}
                     </li>
                   ))}
@@ -527,8 +531,8 @@ export const Landing = () => {
                   Clear trends.
                 </h2>
                 <p className="mt-5 max-w-md text-base leading-7 text-muted">
-                  Inspect every reverse repo operation with full details, trends,
-                  and daily history.
+                  Inspect every reverse repo operation with full details,
+                  trends, and daily history.
                 </p>
 
                 <div className="mt-10 space-y-7">
@@ -622,7 +626,10 @@ export const Landing = () => {
                       <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-accent-foreground">
                         {step}
                       </span>
-                      <Icon className="mt-0.5 size-10 shrink-0 stroke-[1.4]" aria-hidden="true" />
+                      <Icon
+                        className="mt-0.5 size-10 shrink-0 stroke-[1.4]"
+                        aria-hidden="true"
+                      />
                     </div>
                     <div>
                       <h3 className="font-semibold">{title}</h3>
@@ -641,22 +648,31 @@ export const Landing = () => {
               <div className="rounded-xl border border-border bg-surface p-6 sm:p-10">
                 <div className="grid gap-8 md:grid-cols-2 md:gap-0">
                   <div className="flex gap-5 md:pr-10">
-                    <ShieldCheck className="size-12 shrink-0 stroke-[1.4]" aria-hidden="true" />
+                    <ShieldCheck
+                      className="size-12 shrink-0 stroke-[1.4]"
+                      aria-hidden="true"
+                    />
                     <div>
                       <h2 className="text-xl font-bold">Private by design</h2>
                       <p className="mt-2 max-w-md text-sm leading-6 text-muted">
-                        We don’t collect personal data. No accounts, no emails, no
-                        tracking—just the information you need, when you need it.
+                        We don’t collect personal data. No accounts, no emails,
+                        no tracking—just the information you need, when you need
+                        it.
                       </p>
                     </div>
                   </div>
                   <div className="flex gap-5 border-t border-border pt-8 md:border-t-0 md:border-l md:pt-0 md:pl-10">
-                    <Building2 className="size-12 shrink-0 stroke-[1.4]" aria-hidden="true" />
+                    <Building2
+                      className="size-12 shrink-0 stroke-[1.4]"
+                      aria-hidden="true"
+                    />
                     <div>
-                      <h2 className="text-xl font-bold">Official NY Fed data</h2>
+                      <h2 className="text-xl font-bold">
+                        Official NY Fed data
+                      </h2>
                       <p className="mt-2 max-w-md text-sm leading-6 text-muted">
-                        Every operation is sourced directly from the Federal Reserve
-                        Bank of New York.
+                        Every operation is sourced directly from the Federal
+                        Reserve Bank of New York.
                       </p>
                     </div>
                   </div>
