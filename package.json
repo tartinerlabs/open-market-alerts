@@ -15,6 +15,10 @@
     "prepare": "husky",
     "release": "semantic-release"
   },
+  "dependencies": {
+    "@neondatabase/serverless": "1.1.0",
+    "web-push": "3.6.7"
+  },
   "devDependencies": {
     "@biomejs/biome": "2.5.2",
     "@commitlint/cli": "21.2.0",
@@ -37,21 +41,22 @@
     "prettier-plugin-tailwindcss": "0.8.0",
     "semantic-release": "25.0.5",
     "turbo": "2.10.4",
+    "typescript": "7.0.2",
     "vitest": "4.1.10"
   },
   "lint-staged": {
     "*.{js,ts,tsx,jsx,json,jsonc}": "biome check --write --no-errors-on-unmatched"
   },
-  "packageManager": "pnpm@11.10.0",
   "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "12.4.1",
+      "onFail": "download"
+    },
     "runtime": {
       "name": "node",
-      "version": "^26.0.0",
+      "version": "26.8.2",
       "onFail": "download"
     }
-  },
-  "dependencies": {
-    "@neondatabase/serverless": "1.1.0",
-    "web-push": "3.6.7"
   }
 }

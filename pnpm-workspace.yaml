@@ -1,6 +1,6 @@
 packages:
-  - "apps/*"
-  - "packages/*"
+  - apps/*
+  - packages/*
 
 allowBuilds:
   "@heroui-pro/react": true
@@ -8,9 +8,5 @@ allowBuilds:
   esbuild: false
   heroui-native-pro: true
   heroui-pro: true
-
-minimumReleaseAgeExclude:
-  - '@vercel/build-utils@13.32.3'
-  - '@vercel/node@5.8.23'
 
 savePrefix: ""
