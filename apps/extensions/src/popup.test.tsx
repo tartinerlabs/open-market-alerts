@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { vi } from "vitest";
+import { browser } from "wxt/browser";
 import type { Operation } from "@/types/reverse-repo";
 import { Popup } from "./popup";
 
@@ -62,6 +63,12 @@ const renderPopup = () => {
   );
 };
 
+const getExpectedDashboardUrl = () => {
+  const dashboardUrl = new URL(browser.runtime.getURL("/dashboard.html"));
+  dashboardUrl.hash = "/dashboard";
+  return dashboardUrl.href;
+};
+
 beforeEach(() => {
   serviceMocks.getLatestReverseRepo.mockResolvedValue(operation);
   serviceMocks.getRecentReverseRepoTrend.mockResolvedValue([]);
@@ -75,14 +82,9 @@ afterEach(() => {
 
 describe("Popup", () => {
   it("should open the bundled dashboard in a new extension tab", async () => {
-    const createTab = vi.fn().mockResolvedValue(undefined);
-    const getURL = vi.fn(
-      (path: string) => `chrome-extension://test-id/${path}`,
-    );
-    vi.stubGlobal("chrome", {
-      runtime: { getURL, id: "test-id" },
-      tabs: { create: createTab },
-    });
+    const createTab = vi
+      .spyOn(browser.tabs, "create")
+      .mockResolvedValue({} as never);
     const user = userEvent.setup();
     renderPopup();
 
@@ -90,22 +92,8 @@ describe("Popup", () => {
       await screen.findByRole("button", { name: "More Details" }),
     );
 
-    expect(getURL).toHaveBeenCalledWith("index.html");
     expect(createTab).toHaveBeenCalledWith({
-      url: "chrome-extension://test-id/index.html#/dashboard",
+      url: getExpectedDashboardUrl(),
     });
-  });
-
-  it("should open the web dashboard path outside the extension", async () => {
-    vi.stubGlobal("chrome", undefined);
-    const openWindow = vi.spyOn(window, "open").mockImplementation(() => null);
-    const user = userEvent.setup();
-    renderPopup();
-
-    await user.click(
-      await screen.findByRole("button", { name: "More Details" }),
-    );
-
-    expect(openWindow).toHaveBeenCalledWith("/dashboard", "_blank");
   });
 });

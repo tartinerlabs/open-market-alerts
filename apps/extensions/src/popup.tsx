@@ -3,6 +3,7 @@ import { LineChart } from "@heroui-pro/react";
 import { useQuery } from "@tanstack/react-query";
 import { AlertCircle, Building2, ExternalLink, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
+import { browser } from "wxt/browser";
 import { Loader } from "@/components/common/loader";
 import { View } from "@/components/settings/view";
 import { getDashboardUrl } from "@/extension-routing";
@@ -16,7 +17,7 @@ export const Popup = () => {
   const [currentView, setCurrentView] = useState<"main" | "settings">("main");
 
   useEffect(() => {
-    if (typeof chrome !== "undefined" && chrome.storage) {
+    if (browser.storage) {
       setHasUnreadNotification(false);
     }
   }, []);
@@ -38,8 +39,8 @@ export const Popup = () => {
   const handleMoreDetails = () => {
     const dashboardUrl = getDashboardUrl();
 
-    if (typeof chrome !== "undefined" && chrome.tabs) {
-      void chrome.tabs.create({
+    if (browser.tabs) {
+      void browser.tabs.create({
         url: dashboardUrl,
       });
       return;

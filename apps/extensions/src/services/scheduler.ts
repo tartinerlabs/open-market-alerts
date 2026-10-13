@@ -1,3 +1,5 @@
+import { browser } from "wxt/browser";
+
 export const ALARM_NAMES = {
   FED_DATA_CHECK: "fedDataCheck",
 } as const;
@@ -63,7 +65,7 @@ export const scheduleNextFedDataCheck = async (): Promise<void> => {
     nextWeekday.toLocaleString(),
   );
 
-  await chrome.alarms.create(ALARM_NAMES.FED_DATA_CHECK, {
+  await browser.alarms.create(ALARM_NAMES.FED_DATA_CHECK, {
     when: nextWeekday.getTime(),
   });
 };

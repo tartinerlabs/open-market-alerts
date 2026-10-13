@@ -1,7 +1,8 @@
+import { browser } from "wxt/browser";
 import type { Operation } from "../types/reverse-repo.ts";
 
 const NOTIFICATION_CONFIG = {
-  ICON: "icon-48.png",
+  ICON: "/icon-48.png",
   TITLE: "New Fed Reverse Repo Data",
   TEST_TITLE: "Test Notification",
 } as const;
@@ -82,23 +83,11 @@ export const showFedDataNotification = async (
     ? NOTIFICATION_CONFIG.TEST_TITLE
     : NOTIFICATION_CONFIG.TITLE;
 
-  return new Promise<void>((resolve, reject) => {
-    chrome.notifications.create(
-      {
-        type: "basic",
-        iconUrl: chrome.runtime.getURL(NOTIFICATION_CONFIG.ICON),
-        title,
-        message: `${amount} accepted on ${operationDate}`,
-        contextMessage: `Updated: ${updateTime}`,
-      },
-      () => {
-        const lastError = chrome.runtime.lastError;
-        if (lastError) {
-          reject(new Error(lastError.message));
-          return;
-        }
-        resolve();
-      },
-    );
+  await browser.notifications.create({
+    type: "basic",
+    iconUrl: browser.runtime.getURL(NOTIFICATION_CONFIG.ICON),
+    title,
+    message: `${amount} accepted on ${operationDate}`,
+    contextMessage: `Updated: ${updateTime}`,
   });
 };

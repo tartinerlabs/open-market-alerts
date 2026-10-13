@@ -40,7 +40,8 @@ logs after the next Fed operation to confirm that subscriptions are delivered.
 ## Local web build
 
 Use the web-specific commands when reviewing the dashboard outside the Chrome
-extension:
+extension. These use the Vite CLI (React + Tailwind via `wxt.config.ts`) and
+write the Vercel output to `apps/extensions/dist`:
 
 ```sh
 pnpm --filter @tartinerlabs/extensions dev:web
