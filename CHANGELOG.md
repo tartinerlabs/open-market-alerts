@@ -1,3 +1,12 @@
+## [1.6.0](https://github.com/tartinerlabs/open-market-alerts/compare/v1.5.0...v1.6.0) (2026-10-13)
+
+### Features
+
+* drop undocumented WXT manualChunks hook ([1b5c8f5](https://github.com/tartinerlabs/open-market-alerts/commit/1b5c8f5cb9468eea0dde28269dce3d5ff0f97966))
+* migrate Chrome extension from CRXJS to WXT ([9a79538](https://github.com/tartinerlabs/open-market-alerts/commit/9a79538d41fc8ce105232d8248e256e5173dd21f))
+* share vite options from wxt config ([cf53e56](https://github.com/tartinerlabs/open-market-alerts/commit/cf53e56c308477b39bdbe709dd37a0939048736f))
+* slim wxt.config to documented defaults ([475676c](https://github.com/tartinerlabs/open-market-alerts/commit/475676c4a70c4a9e79bc5b36b15d0dd53c33f0b4))
+
 ## [1.5.0](https://github.com/ruchernchong/open-market-alerts/compare/v1.4.0...v1.5.0) (2026-07-09)
 
 ### Features
