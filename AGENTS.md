@@ -6,8 +6,8 @@ This project uses **bd** (beads) for issue tracking. Run `bd prime` for full wor
 
 - The Manifest V3 Chrome extension is built with [WXT](https://wxt.dev). File-based entrypoints live in
   `apps/extensions/src/entrypoints/`: popup, unlisted dashboard page, and `defineBackground` service worker.
-- The hosted web app is a separate Vite SPA (`dev:web` / `build:web` via `vite.web.config.ts`) that always mounts
-  `AppRouter` with `BrowserRouter`.
+- The hosted web app is a Vite SPA (`dev:web` / `build:web`) that always mounts `AppRouter` with
+  `BrowserRouter`. Vite options live in `wxt.config.ts`; `vite.config.ts` only forwards them.
 - The popup's More Details action opens the packaged `dashboard.html#/dashboard` with `browser.runtime.getURL()`; it
   does not require a hosted web deployment or a `WEB_APP_URL` setting.
 - The browser-push control is web-only and is hidden in the extension dashboard.

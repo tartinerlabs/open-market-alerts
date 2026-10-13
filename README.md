@@ -89,8 +89,8 @@ developer workflow.
 
 ```
 apps/extensions/
-├── wxt.config.ts            # WXT extension build
-├── vite.web.config.ts       # Vite SPA / Vercel web build
+├── wxt.config.ts            # WXT extension + shared Vite options
+├── vite.config.ts           # Vite CLI entry; forwards web mode to wxt.config.ts
 ├── src/
 │   ├── entrypoints/         # WXT popup, dashboard, background
 │   ├── components/          # React components

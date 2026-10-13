@@ -8,8 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Fed Open Market Alerts monitors the New York Fed's reverse-repo operations and alerts on new data. The Chrome
 extension is a WXT app (`apps/extensions`, package `@tartinerlabs/extensions`) with file-based entrypoints for the
-popup, an unlisted hash-routed dashboard, and a background service worker. A separate Vite config
-(`vite.web.config.ts`) builds the Vercel SPA from root `index.html` + `src/main.tsx`.
+popup, an unlisted hash-routed dashboard, and a background service worker. The Vercel SPA is the same package's
+root `index.html` + `src/main.tsx`. WXT reads `wxt.config.ts` by default and sets Vite `configFile: false`, so
+extension Vite options go in `vite()`. `dev:web` / `build:web` use the Vite CLI, which reads `vite.config.ts` by
+default; that file forwards to `vite({ mode: "web" })` (React, `@` alias, `wxt/browser` shim, `manualChunks`).
 
 ## Monorepo Layout
 
@@ -82,8 +84,9 @@ unguarded by design, since they're only reached from popup/settings/background c
 - Routes (`AppRouter.tsx`): `/` (Landing), `/dashboard`, `/extension`, `/privacy-policy`, `/terms-of-service`,
   `/contact`. Browser builds use history paths; extension pages use hash paths. SEO via React Helmet Async. The
   web-only browser-push control is hidden in the extension dashboard.
-- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `vite.web.config.ts` sets custom `manualChunks`
-  (charts, heroui, tanstack, motion, react-vendor, vendor). `wxt.config.ts` only adds Tailwind via `vite()`.
+- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `wxt.config.ts` `vite()` adds Tailwind for the
+  extension. The Vite CLI path (web only) also sets `manualChunks` (charts, heroui, tanstack, motion, react-vendor,
+  vendor). Do not apply `manualChunks` or the `wxt/browser` shim to the extension build — background is IIFE.
 - `wxt.config.ts` manifest only sets store `name`, `permissions`, and `host_permissions`. Description comes from
   `package.json`; icons are auto-discovered from `public/icon-*.png`. Popup/background come from entrypoints. Load
   unpacked from `.output/chrome-mv3`.
@@ -93,7 +96,7 @@ unguarded by design, since they're only reached from popup/settings/background c
 - **Biome** (`biome.json`): recommended rules, double quotes, space indent, organize-imports on; excludes `**/dist`,
   `.wxt`, `.output`, and `**/*.svg`; uses `.gitignore` via VCS integration.
 - **TypeScript**: strict, `verbatimModuleSyntax`. Extension `tsconfig.json` extends `./.wxt/tsconfig.json` (WXT maps
-  `@` → `srcDir`). The web Vite config repeats the `@` alias.
+  `@` → `srcDir`). The Vite CLI path in `wxt.config.ts` repeats the `@` alias for the SPA.
 - **UI**: HeroUI v3 (`@heroui/react` + `@heroui-pro/react`) on Tailwind CSS v4 (no v3). v3 uses compound components
   (e.g. `Sheet.Trigger`) and `onPress` (not `onClick`); no Provider needed.
 - **Commits & releases**: Conventional Commits + semantic-release. `main` produces beta prereleases. When creating

@@ -7,10 +7,10 @@
   "scripts": {
     "dev": "wxt",
     "dev:firefox": "wxt -b firefox",
-    "dev:web": "vite --config vite.web.config.ts",
+    "dev:web": "vite",
     "build": "wxt build",
     "build:firefox": "wxt build -b firefox",
-    "build:web": "vite build --config vite.web.config.ts",
+    "build:web": "vite build",
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "compile": "tsc --noEmit",
