@@ -1,16 +1,121 @@
 # Agent Instructions
 
-## Project Runtime
+## Project Overview
 
-- The Manifest V3 Chrome extension is built with [WXT](https://wxt.dev). File-based entrypoints live in
-  `apps/extensions/src/entrypoints/`: popup, unlisted dashboard page, and `defineBackground` service worker.
-- The hosted web app is a Vite SPA (`dev:web` / `build:web`) that always mounts `AppRouter` with
-  `BrowserRouter`. Vite options live in `wxt.config.ts`; `vite.config.ts` only forwards them.
-- The popup's More Details action opens the packaged `dashboard.html#/dashboard` with `browser.runtime.getURL()`; it
-  does not require a hosted web deployment or a `WEB_APP_URL` setting.
-- The browser-push control is web-only and is hidden in the extension dashboard.
-- Run `pnpm test`, `pnpm typecheck`, and `pnpm build` to validate application changes. Extension tests use Vitest
-  and React Testing Library with `WxtVitest`.
+Fed Open Market Alerts monitors the New York Fed's reverse-repo operations and alerts on new data. The Manifest V3
+Chrome extension is a [WXT](https://wxt.dev) app (`apps/extensions`, package `@tartinerlabs/extensions`) with
+file-based entrypoints for the popup, an unlisted hash-routed dashboard, and a `defineBackground` service worker. The
+Vercel SPA is the same package's root `index.html` + `src/main.tsx`. WXT reads `wxt.config.ts` by default and sets
+Vite `configFile: false`, so extension Vite options go in `vite()`. `dev:web` / `build:web` use the Vite CLI, which
+reads `vite.config.ts` by default; that file only forwards to `vite({ mode: "web" })` (React, `@` alias,
+`wxt/browser` shim, `manualChunks`).
+
+## Monorepo Layout
+
+pnpm workspaces + Turborepo. The root package (`fed-open-market-alerts`) holds tooling only; all application
+code lives in `apps/extensions/` (package `@tartinerlabs/extensions`). `packages/` is currently empty.
+
+- Root scripts delegate to `turbo run <task>`; `turbo.json` sets `envMode: strict`.
+- App code: `apps/extensions/src/`. Paths below are relative to there unless noted.
+
+## Development Commands
+
+Run from the repo root:
+
+- `pnpm dev` — `turbo run dev` → `wxt` (extension dev server + HMR)
+- `pnpm build` — `turbo run build` → `wxt build` (MV3 extension in `.output/chrome-mv3`)
+- `pnpm --filter @tartinerlabs/extensions dev:web` — Vite SPA at `http://localhost:5173`
+- `pnpm --filter @tartinerlabs/extensions build:web` — Vite web build to `apps/extensions/dist` (Vercel)
+- `pnpm typecheck` — API `tsc`, then `turbo run typecheck` → extension `tsc --noEmit` (no project references)
+- `pnpm test` — API Vitest suite, then the extension's colocated Vitest/React Testing Library tests (`WxtVitest`)
+- `pnpm preview` — `turbo run preview` → `wxt preview`
+- `pnpm lint` — `biome check --write .` (lint + format with autofix, run at root, not via turbo)
+- `pnpm release` — `semantic-release` (normally CI-only)
+
+Run `pnpm test`, `pnpm typecheck`, and `pnpm build` to validate application changes.
+
+Node 26 (`.node-version`, `devEngines.runtime ^26.0.0`); pnpm `11.10.0` (`packageManager`).
+
+## Architecture
+
+### Extension vs web
+
+WXT entrypoints in `src/entrypoints/` each mount their own UI: popup → `Popup`, unlisted `dashboard.html` →
+`AppRouter` with `HashRouter`, background → `defineBackground`. The web SPA (`src/main.tsx`) always mounts
+`AppRouter` with `BrowserRouter`. Shared `AppProviders` wraps TanStack Query. The popup's More Details action opens
+the packaged `dashboard.html#/dashboard` via `browser.runtime.getURL()`; it does not require a hosted web deployment
+or a `WEB_APP_URL` setting. Extension APIs use `browser` from `wxt/browser`, not `chrome.*`.
+
+### Services (`services/`)
+
+Pure/side-effecting modules the popup, web app, and background worker share:
+
+- `reverse-repo.ts` — Fed data. `FED_MARKETS_API_BASE = https://markets.newyorkfed.org/api/rp/reverserepo/all/results`;
+  `getLastTwoWeeks()` fetches `/lastTwoWeeks.json`. Helpers `getLatestReverseRepo()` / `getRecentReverseRepoTrend()`.
+  Plain `fetch`, no auth.
+- `scheduler.ts` — `browser.alarms` scheduling. `SCHEDULE_CONFIG` = `CHECK_HOUR: 13`, `CHECK_MINUTE: 20`,
+  `EST_UTC_OFFSET: -5`; `isWeekday()` gates Mon–Fri; `scheduleNextFedDataCheck()` creates the `fedDataCheck` alarm.
+- `notifications.ts` — builds/shows `browser.notifications`; includes a test-operation builder for the settings panel.
+- `storage.ts` — wraps `browser.storage.local`. Keys: `last_updated_timestamp`, `has_unread_notification`,
+  `user_preferences`.
+
+### Background worker (`entrypoints/background.ts`, MV3 service worker)
+
+`checkFedData()` fetches the latest operation and compares `lastUpdated` against the stored timestamp; on change it
+notifies **only if** `preferences.notificationsEnabled && preferences.immediateNotifications`, then stores the new
+timestamp and sets the unread flag. `updateBadge()` shows a red "!" badge when unread. Listeners: `onStartup` /
+`onInstalled` (schedule + badge), `alarms.onAlarm` (check + reschedule), `runtime.onMessage` for
+`{action: "checkFedDataNow"}` (manual check), `storage.onChanged` (refresh badge). APIs are registered inside
+`defineBackground`.
+
+### Data fetching
+
+Components call TanStack Query's `useQuery` directly with the service functions as `queryFn` — there is no custom-hook
+layer. Query keys in use: `["latest-reverse-repo"]`, `["reverse-repo-trend"]`, `["user-preferences"]`. Settings
+(`settings/view.tsx`) write preferences via the storage service then `queryClient.setQueryData(["user-preferences"], …)`
+(cache-write, not `useMutation`), gated with `enabled: Boolean(browser.storage)`.
+
+Extension API guards live at the call sites (popup, settings, routing); the service modules call `browser.*`
+unguarded by design, since they're only reached from popup/settings/background contexts.
+
+### Routing & config
+
+- Routes (`AppRouter.tsx`): `/` (Landing), `/dashboard`, `/extension`, `/privacy-policy`, `/terms-of-service`,
+  `/contact`. Browser builds use history paths; extension pages use hash paths. SEO via React Helmet Async. The
+  web-only browser-push control is hidden in the extension dashboard.
+- `config/index.ts` exposes `EXTENSION_*` from `import.meta.env`. `wxt.config.ts` `vite()` adds Tailwind for the
+  extension. The Vite CLI path (web only) also sets `manualChunks` (charts, heroui, tanstack, motion, react-vendor,
+  vendor). Do not apply `manualChunks` or the `wxt/browser` shim to the extension build — background is IIFE.
+- `wxt.config.ts` manifest only sets store `name`, `permissions`, and `host_permissions`. Description comes from
+  `package.json`; icons are auto-discovered from `public/icon-*.png`. Popup/background come from entrypoints. Load
+  unpacked from `.output/chrome-mv3`.
+
+## Tooling & Conventions
+
+- **Biome** (`biome.json`): recommended rules, double quotes, space indent, organize-imports on; excludes `**/dist`,
+  `.wxt`, `.output`, and `**/*.svg`; uses `.gitignore` via VCS integration.
+- **TypeScript**: strict, `verbatimModuleSyntax`. Extension `tsconfig.json` extends `./.wxt/tsconfig.json` (WXT maps
+  `@` → `srcDir`). The Vite CLI path in `wxt.config.ts` repeats the `@` alias for the SPA.
+- **UI**: HeroUI v3 (`@heroui/react` + `@heroui-pro/react`) on Tailwind CSS v4 (no v3). v3 uses compound components
+  (e.g. `Sheet.Trigger`) and `onPress` (not `onClick`); no Provider needed.
+- **Commits & releases**: Conventional Commits + semantic-release. `main` produces beta prereleases. When creating
+  commits, use short title-only messages (no body). Keep `conventional-changelog-conventionalcommits` pinned to
+  `8.0.0` — 9.x/10.x break semantic-release notes.
+
+## CI
+
+`.github/workflows/release.yml` runs on push to `main`: a `checks` job (`biome ci .` + `pnpm typecheck` in parallel),
+then a `release` job (`pnpm build` + `pnpm release`). All actions are SHA-pinned; installs need the
+`HEROUI_AUTH_TOKEN` secret.
+
+## Gotchas
+
+- **DST**: `scheduler.ts` hardcodes `EST_UTC_OFFSET: -5` with no daylight-saving handling, so the "1:20 PM EST" check
+  actually fires an hour off in summer (EDT).
+- **`dailySummary`**: exists in `types/preferences.ts` and the settings UI but has **no implementing logic** in
+  `background.ts` — only `immediateNotifications` gates notifications. The setting is currently non-functional.
+- **`App.tsx`**: dead/legacy — not imported anywhere (popup/dashboard entrypoints and web `main.tsx` render
+  `Popup`/`AppRouter`; `Dashboard` renders `Latest`/`Trend` itself).
 
 ## Non-Interactive Shell Commands
 
