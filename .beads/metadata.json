@@ -1,7 +1,0 @@
-{
-  "database": "dolt",
-  "backend": "dolt",
-  "dolt_mode": "embedded",
-  "dolt_database": "open_market_alerts",
-  "project_id": "aa62443b-28f5-460e-aaf4-748cf24a5cd0"
-}
